@@ -57,33 +57,36 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       passedReq.headers.authorization = `Bearer ${accessToken}`
     }
 
-    proxy.once("proxyRes", (proxyRes: IncomingMessage, callbackReq: IncomingMessage, callbackRes: ServerResponse<IncomingMessage>) => {
-      let apiResponseBody = ""
+    proxy.once(
+      "proxyRes",
+      (proxyRes: IncomingMessage, callbackReq: IncomingMessage, callbackRes: ServerResponse<IncomingMessage>) => {
+        let apiResponseBody = ""
 
-      proxyRes.on("data", (chunk: any) => {
-        apiResponseBody += chunk
-      })
+        proxyRes.on("data", (chunk: any) => {
+          apiResponseBody += chunk
+        })
 
-      proxyRes.on("error", () => {
-        callbackRes.writeHead(500, "internal server error")
-        callbackRes.end(apiResponseBody)
-        return reject(apiResponseBody)
-      })
-
-      proxyRes.on("end", () => {
-        if (proxyRes.statusCode === undefined) {
+        proxyRes.on("error", () => {
           callbackRes.writeHead(500, "internal server error")
           callbackRes.end(apiResponseBody)
           return reject(apiResponseBody)
-        }
-
-        callbackRes.writeHead(proxyRes.statusCode, {
-          headers: proxyRes.rawHeaders
         })
-        callbackRes.end(apiResponseBody)
-        return resolve()
-      })
-    })
+
+        proxyRes.on("end", () => {
+          if (proxyRes.statusCode === undefined) {
+            callbackRes.writeHead(500, "internal server error")
+            callbackRes.end(apiResponseBody)
+            return reject(apiResponseBody)
+          }
+
+          callbackRes.writeHead(proxyRes.statusCode, {
+            headers: proxyRes.rawHeaders
+          })
+          callbackRes.end(apiResponseBody)
+          return resolve()
+        })
+      }
+    )
 
     proxy.web(req, res, {
       target: API_BASE_URL,

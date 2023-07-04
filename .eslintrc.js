@@ -1,11 +1,16 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', "@next/eslint-plugin-next"],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    "@next/eslint-plugin-next",
+    "eslint-plugin-prettier",
+    "@typescript-eslint",
+  ],
   extends: [
     'plugin:@typescript-eslint/recommended',
     // 'plugin:prettier/recommended',
@@ -166,6 +171,11 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': "error"
+    '@typescript-eslint/no-unused-vars': "error",
+
+    "prettier/prettier": ["error", {
+     "trailingComma": "none",
+     "printWidth": 120
+    }]
   },
-};
+}

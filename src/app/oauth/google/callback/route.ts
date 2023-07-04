@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     return redirect("/auth/login")
   }
 
-  const json = await response.json() as HttpBaseResponseBodyJson<ExchangeResponse>
+  const json = (await response.json()) as HttpBaseResponseBodyJson<ExchangeResponse>
 
   // make a cookies
   const now = new Date()
@@ -36,7 +36,8 @@ export async function GET(req: Request) {
     status: 302,
     headers: {
       "Set-Cookie": cookies,
-      Location: "http://localhost:3000"
+      Location: "http://localhost:3000",
+      "Cache-Control": "no-cacheI"
     }
   })
 }

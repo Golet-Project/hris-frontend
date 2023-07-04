@@ -1,25 +1,36 @@
 "use client"
 
-import "./_styles/login.css"
-
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import cn from "classnames"
 
 import { HttpError } from "@/utils/http"
 import { useRouter } from "next/navigation"
 
-import passwordLoginAction from "../_actions/password-login-action"
-import oAuthLoginAction from "../_actions/oauth-login-action"
+import basicLoginRequest from "./_services/basicLoginRequestService"
+import oAuthLoginAction from "./_services/oAuthLoginRequestService"
+import validateBasicLoginPayload from "./_services/validateBasicLoginPayloadService"
 
+import InputEmail from "@/components/input/InputEmail"
+import InputPassword from "@/components/input/InputPassword"
+import AlertDanger from "@/components/alert/AlertDanger"
 
-const oAuthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth")
+import {
+  GOOGLE_OAUTH_CLIENT_ID,
+  GOOGLE_OAUTH_REDIRECT_URI,
+  GOOGLE_OAUTH_SCOPE,
+  GOOGLE_OAUTH_URL
+} from "@/utils/constant"
+
+//=== Login Action ===
+const oAuthUrl = new URL(GOOGLE_OAUTH_URL)
 
 const params = new URLSearchParams()
-params.append("client_id", "235744230157-n2t4pjvoq4bbfhisqlrur2cct4ool6c8.apps.googleusercontent.com")
-params.append("redirect_uri", "http://localhost:3001/oauth/google/callback")
+params.append("client_id", GOOGLE_OAUTH_CLIENT_ID)
+params.append("redirect_uri", GOOGLE_OAUTH_REDIRECT_URI)
 params.append("response_type", "token")
-params.append("scope", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile")
+params.append("scope", GOOGLE_OAUTH_SCOPE)
 
 oAuthUrl.search = params.toString()
 
@@ -28,23 +39,40 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [alertMessage, setAlertMessage] = useState("")
+  const [loginButtonDisabled, setLoginButtonDisabled] = useState(false)
 
-  const handlePasswordLogin = async (e: any) => {
+  //=== Handler ===
+  const handleBasicLogin = async (e: any) => {
     e.preventDefault()
+    setLoginButtonDisabled(true)
+
+    // validate first before making a request
+    const payloadError = validateBasicLoginPayload({
+      email: email,
+      password: password
+    })
+    if (payloadError !== null) {
+      setAlertMessage(payloadError.reason)
+      setLoginButtonDisabled(false)
+      return
+    }
 
     try {
-      const response = await passwordLoginAction({
+      const response = await basicLoginRequest({
         email: email,
         password: password
       })
 
       if ("error" in response) {
-        alert(response.error)
+        alert(response.error?.message ?? "")
         return
       }
 
+      router.refresh() // invalidating cache
       router.replace("/")
     } catch (error) {
+      setLoginButtonDisabled(false)
       if (error instanceof HttpError) {
         // TODO: proper alert
         alert(error.message)
@@ -80,32 +108,33 @@ export default function LoginForm() {
     }
   }
 
+  const handleAlertDismiss = () => {
+    setAlertMessage("")
+  }
+
   return (
     <>
-      <form className="lg:mt-9 xl:mt-12" method="POST">
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="input-text"
-          placeholder="Email"
-          autoComplete="on"
-          onChange={(e) => setEmail(e.target.value)}
-        >
-        </input>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          className="input-text"
-          placeholder="Password"
-          autoComplete="current-password"
-          onChange={(e) => setPassword(e.target.value)}
-        >
-        </input>
+      {alertMessage && <AlertDanger text={alertMessage} handleDismiss={handleAlertDismiss} />}
+      <form
+        className={cn("lg:mt-9", {
+          "xl:mt-12": alertMessage === "",
+
+          "mt-4 xl:mt-8": alertMessage !== ""
+        })}
+        method="POST"
+      >
+        <InputEmail name="email" label="Email" onChange={(e) => setEmail(e?.target.value ?? "")} />
+
+        <InputPassword name="password" label="Password" onChange={(e) => setPassword(e?.target.value ?? "")} />
+
         <Link href="/">Lupa password?</Link>
 
-        <button type="submit" onClick={(e) => handlePasswordLogin(e)} className="btn-primary mt-6">
+        <button
+          type="submit"
+          onClick={(e) => handleBasicLogin(e)}
+          className="btn-primary mt-6 disabled:bg-red-500"
+          disabled={loginButtonDisabled}
+        >
           Masuk
         </button>
       </form>
@@ -117,7 +146,6 @@ export default function LoginForm() {
       </div>
 
       <button
-        // href={oAuthUrl.toString()}
         type="button"
         className="
           flex items-center
@@ -127,9 +155,11 @@ export default function LoginForm() {
           lg:py-2 xl:py-3 bg-white
           text-sm sm:text-base
           text-gray-700 font-bold
-          rounded-md hover:bg-manatee
+          rounded-md hover:opacity-70
           w-full border border-gray-300"
-        onClick={handleOAuth}>
+        onClick={handleOAuth}
+        disabled={loginButtonDisabled}
+      >
         <Image
           src="/static/images/google.svg"
           alt="google"

@@ -1,0 +1,61 @@
+"use client"
+
+import cn from "classnames"
+import { ChangeEvent, useState } from "react"
+
+type InputEmailProps = {
+  label: string
+  id?: string
+  name?: string
+
+  className?: string
+
+  onChange?: (e?: ChangeEvent<HTMLInputElement>) => void
+}
+
+export default function InputEmail(props: InputEmailProps) {
+  const [isFocus, setIsFocus] = useState(false)
+  const [value, setValue] = useState("")
+
+  const handleOnChange = (e?: ChangeEvent<HTMLInputElement>) => {
+    setValue(e?.target.value ?? "")
+    if (props.onChange !== undefined) {
+      props.onChange(e)
+    }
+  }
+
+  return (
+    <div
+      className={cn(
+        "mb-4 px-4 py-2 border border-solid border-gray-300 relative rounded-lg",
+        isFocus ? "border-cornflower-blue" : "",
+        props.className
+      )}
+    >
+      <span
+        className={cn("transition-all duration-300 ease-in-out", "text-gray-400", {
+          "absolute left-2 -top-2 bg-white px-2 text-xs": isFocus || value,
+
+          "absolute px-2 left-3 top-1/2 -translate-y-1/2": !isFocus && value === "",
+          "text-base bg-transparent": !isFocus && value === "",
+          "inline-block align-middle": !isFocus && value === ""
+        })}
+      >
+        {props.label}
+      </span>
+
+      <input
+        type="email"
+        id={props.id}
+        name={props.name}
+        autoComplete="off"
+        className={cn(
+          "focus:outline-none w-full border-none bg-transparent" // base style
+        )}
+        onChange={handleOnChange}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+      />
+    </div>
+  )
+}

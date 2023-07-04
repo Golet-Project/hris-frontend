@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|static).*)"
-  ]
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|static).*)"]
 }
 
 export function middleware(req: NextRequest) {
@@ -11,6 +9,7 @@ export function middleware(req: NextRequest) {
   const cookies = req.cookies.get("token")
 
   const nextUrl = req.nextUrl
+
   if (nextUrl.pathname === "/auth/login" || nextUrl.pathname.startsWith("/oauth")) {
     if (cookies === undefined) {
       return NextResponse.next()
@@ -23,5 +22,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", req.url))
   }
 
-  return NextResponse.next()
+  const res = NextResponse.next()
+
+  return res
 }
