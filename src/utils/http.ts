@@ -44,7 +44,7 @@ export class HttpError {
 }
 
 export type HttpResponse<T = undefined> = {
-  error?: HttpResponseError,
+  error?: HttpResponseError
   success?: HttpBaseResponseBodyJson<T>
 }
 

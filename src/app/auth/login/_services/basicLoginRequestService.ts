@@ -3,18 +3,24 @@
 import { HttpBaseResponseBodyJson, HttpResponse, proxyUrl } from "@/utils/http"
 import { cookies } from "next/headers"
 
-type SubmitFormIn = {
+type BasicLoginIn = {
   email: string
   password: string
 }
 
-type SubmitFormApiResponse = {
+type LoginActionApiResponse = {
   access_token: string
 }
 
 type SubmitFormOut = HttpResponse
 
-export default async function passwordLoginAction(params: SubmitFormIn): Promise<SubmitFormOut> {
+/**
+ * Handle an action to make a HTTP request to obtain a access token
+ *
+ * @param params request payload
+ * @returns error or success object
+ */
+export default async function basicLoginRequest(params: BasicLoginIn): Promise<SubmitFormOut> {
   const url = proxyUrl("/auth/login")
   const body = {
     email: params.email,
@@ -34,7 +40,7 @@ export default async function passwordLoginAction(params: SubmitFormIn): Promise
   })
 
   if (!response.ok) {
-    const json = await response.json() as HttpBaseResponseBodyJson<null>
+    const json = (await response.json()) as HttpBaseResponseBodyJson<null>
     return {
       error: {
         message: json.message,
@@ -43,7 +49,7 @@ export default async function passwordLoginAction(params: SubmitFormIn): Promise
     }
   }
 
-  const json = await response.json() as HttpBaseResponseBodyJson<SubmitFormApiResponse>
+  const json = (await response.json()) as HttpBaseResponseBodyJson<LoginActionApiResponse>
 
   const cookiesExpiredIn = new Date()
   const time = cookiesExpiredIn.getTime()

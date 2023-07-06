@@ -8,7 +8,7 @@ type OAuthLoginRespose = {
 
 type OAuthLoginOut = HttpResponse<OAuthLoginRespose>
 
-export default async function oAuthLoginAction(): Promise<OAuthLoginOut> {
+export default async function oAuthLoginRequest(): Promise<OAuthLoginOut> {
   const url = proxyUrl("/oauth/google/login")
 
   const response = await fetch(url, {
@@ -25,7 +25,7 @@ export default async function oAuthLoginAction(): Promise<OAuthLoginOut> {
     }
   }
 
-  const json = await response.json() as HttpBaseResponseBodyJson<OAuthLoginRespose>
+  const json = (await response.json()) as HttpBaseResponseBodyJson<OAuthLoginRespose>
 
   return {
     success: json

@@ -1,8 +1,10 @@
 import "@/styles/globals.css"
 import { Inter } from "next/font/google"
+import { cookies } from "next/headers"
+import Provider from "./Provider"
 
 type RootProps = {
-  children: React.ReactNode,
+  children: React.ReactNode
 }
 
 const inter = Inter({ subsets: ["latin"] })
@@ -13,10 +15,14 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }: RootProps) {
+  const cookieStore = cookies()
+  const token = cookieStore.get("token")
+  // TODO: validate token if needed
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <Provider isAuthenticated={token !== undefined && token.toString() !== ""}>{children}</Provider>
       </body>
     </html>
   )

@@ -1,0 +1,23 @@
+{
+  "tabWidth": 2,
+  "singleQuote": false,
+  "semi": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": [".eslintrc", ".eslintrc.json", ".eslintrc.js"],
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.tsx",
+      "options": {
+        "parser": "typescript"
+      }
+    }
+  ]
+}
