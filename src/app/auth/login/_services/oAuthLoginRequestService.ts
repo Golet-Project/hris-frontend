@@ -1,5 +1,6 @@
 "use server"
 
+import { APP_ID } from "@/utils/constant"
 import { HttpBaseResponseBodyJson, HttpResponse, HttpStatusCode, proxyUrl } from "@/utils/http"
 
 type OAuthLoginRespose = {
@@ -13,6 +14,9 @@ export default async function oAuthLoginRequest(): Promise<OAuthLoginOut> {
 
   const response = await fetch(url, {
     method: "POST",
+    headers: {
+      "X-App-ID": APP_ID
+    },
     redirect: "manual"
   })
 
