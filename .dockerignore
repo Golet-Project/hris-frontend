@@ -1,0 +1,14 @@
+# git
+.git
+.gitignore
+
+# secret
+# .env
+
+# formatting
+.prettierrc
+.eslintrc.js
+README.md
+
+# node
+node_modules

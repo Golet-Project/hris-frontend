@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/utils/constant"
+import { API_BASE_URL, APP_ID } from "@/utils/constant"
 import { HttpBaseResponseBodyJson } from "@/utils/http"
 import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
@@ -15,7 +15,10 @@ export async function GET(req: Request) {
 
   // send to the backend, to exchange the code
   const response = await fetch(exchangeUrl, {
-    method: "GET"
+    method: "GET",
+    headers: {
+      "X-App-ID": APP_ID
+    }
   })
 
   if (!response.ok) {

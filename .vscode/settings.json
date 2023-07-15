@@ -14,5 +14,14 @@
   },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   } // set as "true" to run 'prettier' last not first
 }
