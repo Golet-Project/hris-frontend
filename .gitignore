@@ -38,3 +38,6 @@ next-env.d.ts
 
 # build
 *.docker-compose.yaml
+
+# deploy
+*fly.toml

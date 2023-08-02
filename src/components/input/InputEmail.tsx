@@ -28,7 +28,7 @@ export default function InputEmail(props: InputEmailProps) {
     <div
       className={cn(
         "mb-4 px-4 py-2 border border-solid border-gray-300 relative rounded-lg",
-        isFocus ? "border-cornflower-blue" : "",
+        isFocus ? "border-primary" : "",
         props.className
       )}
     >

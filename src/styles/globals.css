@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
 
@@ -18,7 +18,7 @@ input:-webkit-autofill {
 
 @layer components {
   .btn-primary {
-    @apply block my-2 px-5 lg:py-3 py-2 xl:py-3 bg-cornflower-blue text-white font-bold rounded-md hover:opacity-70 w-full;
+    @apply block my-2 px-5 lg:py-3 py-2 xl:py-3 bg-primary text-white font-bold rounded-md hover:opacity-70 w-full;
   }
 
   .input-text {
