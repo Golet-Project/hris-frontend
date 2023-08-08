@@ -10,6 +10,7 @@ import { BiHomeAlt, BiLockAlt } from "react-icons/bi"
 import { FiUserPlus } from "react-icons/fi"
 import { RxDoubleArrowLeft } from "react-icons/rx"
 import { BiSearch } from "react-icons/bi"
+import { InputBase } from "@mui/material"
 
 const menuIconClassName = {
   collapse: ["block", "mx-auto", "mb-1"],
@@ -31,7 +32,6 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
       pathName: "/",
       title: "Beranda"
     },
@@ -41,8 +41,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
-      pathName: "#",
+      pathName: "/role",
       title: "Role"
     },
     {
@@ -51,7 +50,6 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
       pathName: "#",
       title: "User"
     }
@@ -60,7 +58,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "p-4 bg-white min-h-screen m-0", // decorating
+        "p-4 bg-white h-full m-0", // decorating
         "absolute", // positioning
         "transition-all duration-300 ease-in-out", // animate
         {
@@ -125,7 +123,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
                   }
                 )}
               >
-                <Link className={!isCollapse ? "flex items-center" : ""} href={menu.link ? menu.link : "#"}>
+                <Link className={!isCollapse ? "flex items-center" : ""} href={menu.pathName ? menu.pathName : "#"}>
                   {menu.icon}
                   <span>{menu.title}</span>
                 </Link>
@@ -143,7 +141,8 @@ function TopBar() {
     <nav className="py-3 px-5 bg-white rounded-lg">
       <span className="flex flex-row items-center bg-slate-100 w-[300px] rounded-lg px-3 py-2">
         <BiSearch className="text-lg lg:text-xl mr-4" />
-        <input type="text" placeholder="Search" className={cn("focus:outline-none bg-transparent", "w-full")} />
+
+        <InputBase placeholder="Search" />
       </span>
     </nav>
   )
@@ -154,7 +153,7 @@ type ProviderProps = {
   isAuthenticated: boolean
 }
 
-export default function Provider({ children, isAuthenticated }: ProviderProps) {
+export default function LayoutProvider({ children, isAuthenticated }: ProviderProps) {
   //== State ===
   const [isCollapse, setIsCollapse] = useState(false)
 

@@ -68,6 +68,7 @@ export default function LoginForm() {
 
       if ("error" in response) {
         alert(response.error?.message ?? "")
+        setLoginButtonDisabled(false)
         return
       }
 

@@ -1,7 +1,7 @@
 import "@/styles/globals.css"
 import { Inter } from "next/font/google"
 import { cookies } from "next/headers"
-import Provider from "./Provider"
+import LayoutProvider from "./LayoutProvider"
 // import { ThemeProvider, createTheme } from "@mui/material"
 
 type RootProps = {
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: RootProps) {
     <html lang="en">
       <body className={inter.className}>
         {/* <ThemeProvider theme={theme}> */}
-        <Provider isAuthenticated={token !== undefined && token.toString() !== ""}>{children}</Provider>
+        <LayoutProvider isAuthenticated={token !== undefined && token.toString() !== ""}>{children}</LayoutProvider>
         {/* </ThemeProvider> */}
       </body>
     </html>
