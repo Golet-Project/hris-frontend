@@ -1,5 +1,6 @@
 "use server"
 
+import { APP_ID } from "@/utils/constant"
 import { HttpBaseResponseBodyJson, HttpResponse, proxyUrl } from "@/utils/http"
 import { cookies } from "next/headers"
 
@@ -30,7 +31,8 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "X-App-ID": APP_ID
     },
     body: JSON.stringify(body),
 

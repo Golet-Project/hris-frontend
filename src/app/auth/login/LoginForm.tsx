@@ -12,9 +12,11 @@ import basicLoginRequest from "./_services/basicLoginRequestService"
 import oAuthLoginAction from "./_services/oAuthLoginRequestService"
 import validateBasicLoginPayload from "./_services/validateBasicLoginPayloadService"
 
-import InputEmail from "@/components/input/InputEmail"
-import InputPassword from "@/components/input/InputPassword"
+// import InputEmail from "@/components/input/InputEmail"
+// import InputPassword from "@/components/input/InputPassword"
 import AlertDanger from "@/components/alert/AlertDanger"
+import { TextField, ThemeProvider, Button } from "@mui/material"
+import { MuiThemeProvider } from "@/themes/MuiThemeProvider"
 
 import {
   GOOGLE_OAUTH_CLIENT_ID,
@@ -66,6 +68,7 @@ export default function LoginForm() {
 
       if ("error" in response) {
         alert(response.error?.message ?? "")
+        setLoginButtonDisabled(false)
         return
       }
 
@@ -123,20 +126,55 @@ export default function LoginForm() {
         })}
         method="POST"
       >
-        <InputEmail name="email" label="Email" onChange={(e) => setEmail(e?.target.value ?? "")} />
+        <ThemeProvider theme={MuiThemeProvider}>
+          <TextField
+            id="email"
+            autoComplete="false"
+            type="email"
+            label="Email"
+            variant="outlined"
+            size="small"
+            className="w-full my-2"
+            onChange={(e) => setEmail(e?.target?.value ?? "")}
+          />
 
-        <InputPassword name="password" label="Password" onChange={(e) => setPassword(e?.target.value ?? "")} />
+          <TextField
+            id="password"
+            autoComplete="false"
+            type="password"
+            label="Password"
+            variant="outlined"
+            size="small"
+            className="w-full my-2"
+            onChange={(e) => setPassword(e?.target.value ?? "")}
+          />
+
+          <Button
+            type="submit"
+            onClick={(e) => handleBasicLogin(e)}
+            disabled={loginButtonDisabled}
+            variant="contained"
+            color="primary"
+            className="mt-6 w-full"
+          >
+            Masuk
+          </Button>
+        </ThemeProvider>
+
+        {/* <InputEmail name="email" label="Email" onChange={(e) => setEmail(e?.target.value ?? "")} /> */}
+
+        {/* <InputPassword name="password" label="Password" onChange={(e) => setPassword(e?.target.value ?? "")} /> */}
 
         <Link href="/">Lupa password?</Link>
 
-        <button
+        {/* <button
           type="submit"
           onClick={(e) => handleBasicLogin(e)}
           className="btn-primary mt-6 disabled:bg-red-500"
           disabled={loginButtonDisabled}
         >
           Masuk
-        </button>
+        </button> */}
       </form>
 
       <div className="flex items-center justify-center">

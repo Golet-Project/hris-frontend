@@ -3,8 +3,17 @@ import { IncomingMessage, ServerResponse } from "http"
 import httpProxy from "http-proxy"
 import { NextApiRequest, NextApiResponse } from "next"
 
+const url = new URL(API_BASE_URL)
+
 const proxy = httpProxy.createProxyServer({
-  target: API_BASE_URL
+  target: {
+    host: url.host,
+    port: url.port,
+    protocol: url.protocol,
+    hostname: url.hostname
+  },
+  secure: true,
+  changeOrigin: true
 })
 
 export const config = {
@@ -89,8 +98,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     )
 
     proxy.web(req, res, {
-      target: API_BASE_URL,
-      autoRewrite: false,
       selfHandleResponse: true
     })
   })

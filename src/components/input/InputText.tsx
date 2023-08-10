@@ -26,7 +26,7 @@ export default function InputText(props: InputTextProps) {
     <div
       className={cn(
         "px-4 py-2 mb-4 border border-solid border-gray-300 relative rounded-lg",
-        isFocus ? "border-cornflower-blue" : "",
+        isFocus ? "border-primary" : "",
         props.className
       )}
     >

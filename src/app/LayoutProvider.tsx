@@ -4,9 +4,13 @@ import cn from "classnames"
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import { usePathname } from "next/navigation"
+
 import { BiHomeAlt, BiLockAlt } from "react-icons/bi"
 import { FiUserPlus } from "react-icons/fi"
 import { RxDoubleArrowLeft } from "react-icons/rx"
+import { BiSearch } from "react-icons/bi"
+import { InputBase } from "@mui/material"
 
 const menuIconClassName = {
   collapse: ["block", "mx-auto", "mb-1"],
@@ -18,6 +22,8 @@ type SidebarProps = {
 }
 
 function Sidebar({ isCollapse }: SidebarProps) {
+  const currentPathName = usePathname()
+
   //=== Sidebar Menu List ===
   const sidebarMenuList = [
     {
@@ -26,7 +32,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
+      pathName: "/",
       title: "Beranda"
     },
     {
@@ -35,7 +41,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
+      pathName: "/role",
       title: "Role"
     },
     {
@@ -44,7 +50,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      link: "#",
+      pathName: "#",
       title: "User"
     }
   ]
@@ -52,8 +58,8 @@ function Sidebar({ isCollapse }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "p-4 bg-white min-h-screen m-0", // decorating
-        "fixed", // positioning
+        "p-4 bg-white h-full m-0", // decorating
+        "absolute", // positioning
         "transition-all duration-300 ease-in-out", // animate
         {
           // collapse
@@ -98,12 +104,16 @@ function Sidebar({ isCollapse }: SidebarProps) {
         {/* Sidebar Menu List */}
         <ul>
           {sidebarMenuList.map((menu, index) => {
+            const isActive = currentPathName === menu.pathName
             return (
               <li
                 key={index}
                 className={cn(
                   "py-2 my-2 rounded-lg", // decorating
-                  "text-white bg-cornflower-blue", // decorating
+                  {
+                    "text-white bg-primary": isActive
+                  },
+                  "hover:text-white hover:bg-primary hover:opacity-80 hover:cursor-pointer",
                   {
                     // collapse
                     "px-2 text-[9px] text-center": isCollapse,
@@ -113,7 +123,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
                   }
                 )}
               >
-                <Link className={!isCollapse ? "flex items-center" : ""} href={menu.link ? menu.link : "#"}>
+                <Link className={!isCollapse ? "flex items-center" : ""} href={menu.pathName ? menu.pathName : "#"}>
                   {menu.icon}
                   <span>{menu.title}</span>
                 </Link>
@@ -126,22 +136,34 @@ function Sidebar({ isCollapse }: SidebarProps) {
   )
 }
 
+function TopBar() {
+  return (
+    <nav className="py-3 px-5 bg-white rounded-lg">
+      <span className="flex flex-row items-center bg-slate-100 w-[300px] rounded-lg px-3 py-2">
+        <BiSearch className="text-lg lg:text-xl mr-4" />
+
+        <InputBase placeholder="Search" />
+      </span>
+    </nav>
+  )
+}
+
 type ProviderProps = {
   children?: React.ReactNode
   isAuthenticated: boolean
 }
 
-export default function Provider({ children, isAuthenticated }: ProviderProps) {
+export default function LayoutProvider({ children, isAuthenticated }: ProviderProps) {
   //== State ===
   const [isCollapse, setIsCollapse] = useState(false)
 
   return (() => {
     if (isAuthenticated) {
       return (
-        <div className={cn("2xl:max-w-[1900px]", "m-auto", "min-h-screen")}>
+        <div className={cn("2xl:max-w-[1900px]", "m-auto", "min-h-screen", "relative")}>
           <Sidebar isCollapse={isCollapse} />
           <main
-            className={cn("p-2", "transition-all duration-300 ease-in-out relative", {
+            className={cn("p-4", "transition-all duration-300 ease-in-out relative", {
               // collapse
               "ml-0 lg:ml-[80px]": isCollapse,
 
@@ -149,10 +171,11 @@ export default function Provider({ children, isAuthenticated }: ProviderProps) {
               "ml-[280px]": !isCollapse
             })}
           >
+            {/* Collapse Button */}
             <span
               className={cn(
                 "p-2 text-2xl font-semibold border border-white bg-white rounded-full cursor-pointer", // decorating
-                "hover:bg-slate-300", // decorating
+                "hover:bg-primary hover:opacity-80 hover:text-white", // decorating
                 "block absolute top-9 -left-5", // positioning
                 {
                   "rotate-180 -left-2 lg:-left-5": isCollapse
@@ -162,7 +185,8 @@ export default function Provider({ children, isAuthenticated }: ProviderProps) {
             >
               <RxDoubleArrowLeft />
             </span>
-            ini main
+            {/* Top Bar */}
+            <TopBar />
             {children}
           </main>
         </div>
