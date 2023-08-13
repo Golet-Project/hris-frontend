@@ -3,6 +3,7 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
+  mode: "jit",
   // important: "#_next ",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
