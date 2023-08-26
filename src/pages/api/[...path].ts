@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/utils/constant"
+import { API_BASE_URL } from "@/lib/constant"
 import { IncomingMessage, ServerResponse } from "http"
 import httpProxy from "http-proxy"
 import { NextApiRequest, NextApiResponse } from "next"

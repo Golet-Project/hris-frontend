@@ -8,9 +8,10 @@ import { usePathname } from "next/navigation"
 
 import { BiHomeAlt, BiLockAlt } from "react-icons/bi"
 import { FiUserPlus } from "react-icons/fi"
-import { RxDoubleArrowLeft } from "react-icons/rx"
 import { BiSearch } from "react-icons/bi"
-import { InputBase } from "@mui/material"
+import { FaUserTie } from "react-icons/fa6"
+import { RxDoubleArrowLeft } from "react-icons/rx"
+import { Input } from "@/components/ui/input"
 
 const menuIconClassName = {
   collapse: ["block", "mx-auto", "mb-1"],
@@ -34,6 +35,15 @@ function Sidebar({ isCollapse }: SidebarProps) {
       ),
       pathName: "/",
       title: "Beranda"
+    },
+    {
+      icon: (
+        <FaUserTie
+          className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
+        />
+      ),
+      pathName: "/employee",
+      title: "Karyawan"
     },
     {
       icon: (
@@ -140,9 +150,9 @@ function TopBar() {
   return (
     <nav className="py-3 px-5 bg-white rounded-lg">
       <span className="flex flex-row items-center bg-slate-100 w-[300px] rounded-lg px-3 py-2">
-        <BiSearch className="text-lg lg:text-xl mr-4" />
+        <BiSearch className="text-lg lg:text-xl" />
 
-        <InputBase placeholder="Search" />
+        <Input placeholder="search" className="border-none shadow-none text-lg focus-visible:ring-0" />
       </span>
     </nav>
   )
