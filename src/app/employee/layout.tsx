@@ -1,6 +1,14 @@
-export default function EmployeeLayout({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode
+  modal: React.ReactNode
+}
+
+export default function EmployeeLayout(props: Props) {
   return (
     // wrapper
-    <div className="mt-6">{children}</div>
+    <div className="mt-6 relative min-h-screen">
+      {props.modal}
+      {props.children}
+    </div>
   )
 }

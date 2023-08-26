@@ -1,5 +1,5 @@
-import { API_BASE_URL, APP_ID } from "@/utils/constant"
-import { HttpBaseResponseBodyJson } from "@/utils/http"
+import { API_BASE_URL, APP_ID } from "@/lib/constant"
+import { HttpBaseResponseBodyJson } from "@/lib/http"
 import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
 

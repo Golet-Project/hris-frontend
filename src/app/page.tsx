@@ -3,7 +3,6 @@ import Image from "next/image"
 import dynamic from "next/dynamic"
 
 const StatisticChart = dynamic(() => import("./StatisticChart"), { ssr: false }) // use this import method to prevent hydration mismatches
-import { LastActivityTable } from "./LastActivityTable"
 
 export default function Page() {
   const data = [
@@ -179,9 +178,7 @@ export default function Page() {
         </aside>
       </div>
       {/* Bottom Table */}
-      <div className="mt-6 w-100">
-        <LastActivityTable />
-      </div>
+      <div className="mt-6 w-100"></div>
     </>
   )
 }

@@ -1,7 +1,7 @@
 "use server"
 
-import { APP_ID } from "@/utils/constant"
-import { HttpBaseResponseBodyJson, HttpResponse, proxyUrl } from "@/utils/http"
+import { APP_ID } from "@/lib/constant"
+import { HttpBaseResponseBodyJson, HttpResponse, proxyUrl } from "@/lib/http"
 import { cookies, headers } from "next/headers"
 
 type BasicLoginIn = {
@@ -80,6 +80,7 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
     }
   } catch (error) {
     // TODO: send to logger
+    // eslint-disable-next-line no-console
     console.log(error)
     throw error
   }

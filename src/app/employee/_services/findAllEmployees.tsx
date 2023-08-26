@@ -1,10 +1,10 @@
 "use server"
 
-import { API_BASE_URL, APP_ID } from "@/utils/constant"
-import { HttpBaseResponseBodyJson, HttpResponse } from "@/utils/http"
-import { getAccessToken, getUserAgent } from "@/utils/utils"
+import { API_BASE_URL, APP_ID } from "@/lib/constant"
+import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
+import { getAccessToken, getUserAgent } from "@/lib/server-utils"
 
-type FindEmployeesResponse = {
+type Employee = {
   id: string
   full_name: string
   gender: string
@@ -16,7 +16,9 @@ type FindEmployeesResponse = {
   employee_status: string
 }
 
-type FindAllEmployeesOut = HttpResponse<FindEmployeesResponse[]>
+export type FindEmployeesResponse = Employee[]
+
+type FindAllEmployeesOut = HttpResponse<FindEmployeesResponse>
 
 export default async function findAllEmployees(): Promise<FindAllEmployeesOut> {
   try {
@@ -46,13 +48,14 @@ export default async function findAllEmployees(): Promise<FindAllEmployeesOut> {
       }
     }
 
-    const json = (await response.json()) as HttpBaseResponseBodyJson<FindEmployeesResponse[]>
+    const json = (await response.json()) as HttpBaseResponseBodyJson<FindEmployeesResponse>
     return {
       success: json
     }
   } catch (error) {
     // TODO: proper error
-    console.log(error)
+    // eslint-disable-next-line no-console
+    console.log("Error", error)
     throw error
   }
 }
