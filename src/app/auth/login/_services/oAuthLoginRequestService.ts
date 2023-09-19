@@ -1,7 +1,7 @@
 "use server"
 
-import { APP_ID } from "@/utils/constant"
-import { HttpBaseResponseBodyJson, HttpResponse, HttpStatusCode, proxyUrl } from "@/utils/http"
+import { APP_ID } from "@/lib/constant"
+import { HttpBaseResponseBodyJson, HttpResponse, HttpStatusCode, proxyUrl } from "@/lib/http"
 import { headers } from "next/headers"
 
 type OAuthLoginRespose = {

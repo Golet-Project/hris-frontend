@@ -28,31 +28,29 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     } else {
       return (
         <TableRow>
-          <TableCell colSpan={columns.length} className="h-24 text-center"></TableCell>
+          <TableCell colSpan={columns.length} className="h-24"></TableCell>
         </TableRow>
       )
     }
   }
 
   return (
-    <div className="rounded-md border bg-white">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
+    <Table>
+      <TableHeader className="bg-table-header">
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => {
+              return (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              )
+            })}
+          </TableRow>
+        ))}
+      </TableHeader>
 
-        <TableBody>{renderTableBody()}</TableBody>
-      </Table>
-    </div>
+      <TableBody>{renderTableBody()}</TableBody>
+    </Table>
   )
 }

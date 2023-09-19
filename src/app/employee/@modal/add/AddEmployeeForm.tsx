@@ -23,7 +23,9 @@ export default function AddEmployeeForm() {
   })
 
   const onSubmit = (values: AddEmployeeSchema) => {
-    console.log(values)
+    // TODO: handle on submit
+    if (values) {
+    }
   }
 
   return (

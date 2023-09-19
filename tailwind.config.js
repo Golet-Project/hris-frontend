@@ -20,6 +20,7 @@ module.exports = {
         "form-label": "var(--form-label)",
         manatee: "var(--manatee)",
         "background-color": "var(--background-color)",
+        "table-header": "var(--table-header)",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
