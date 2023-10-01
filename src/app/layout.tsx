@@ -20,14 +20,16 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }: RootProps) {
-  const cookieStore = cookies()
-  const token = cookieStore.get("token")
+  // const cookieStore = cookies()
+  // const token = cookieStore.get("token")
+  // TODO: for development only
+  const authenticated = true
   // TODO: validate token if needed
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <LayoutProvider isAuthenticated={token !== undefined && token.toString() !== ""}>{children}</LayoutProvider>
+        <LayoutProvider isAuthenticated={authenticated}>{children}</LayoutProvider>
       </body>
     </html>
   )

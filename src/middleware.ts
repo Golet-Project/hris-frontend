@@ -6,21 +6,22 @@ export const config = {
 
 export function middleware(req: NextRequest) {
   // get cookies
-  const cookies = req.cookies.get("token")
+  // TODO: uncoment if already deployed
+  // const cookies = req.cookies.get("token")
 
-  const nextUrl = req.nextUrl
+  // const nextUrl = req.nextUrl
 
-  if (nextUrl.pathname === "/auth/login" || nextUrl.pathname.startsWith("/oauth")) {
-    if (cookies === undefined) {
-      return NextResponse.next()
-    }
+  // if (nextUrl.pathname === "/auth/login" || nextUrl.pathname.startsWith("/oauth")) {
+  //   if (cookies === undefined) {
+  //     return NextResponse.next()
+  //   }
 
-    return NextResponse.redirect(new URL("/", req.url))
-  }
+  //   return NextResponse.redirect(new URL("/", req.url))
+  // }
 
-  if (cookies === undefined) {
-    return NextResponse.redirect(new URL("/auth/login", req.url))
-  }
+  // if (cookies === undefined) {
+  //   return NextResponse.redirect(new URL("/auth/login", req.url))
+  // }
 
   const res = NextResponse.next()
 
