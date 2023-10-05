@@ -25,8 +25,8 @@ export default function Page() {
           <Image
             src="/static/images/people-in-desk.svg"
             alt="Person in the front of desk"
-            width={800}
-            height={800}
+            width={700}
+            height={700}
             priority
             style={imageStyle}
             className="
