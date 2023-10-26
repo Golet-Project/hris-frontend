@@ -34,6 +34,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
         />
       ),
       pathName: "/",
+      activePattern: /^\/$/i,
       title: "Beranda"
     },
     {
@@ -43,6 +44,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
         />
       ),
       pathName: "/employee",
+      activePattern: /^\/employee\/?.*/i,
       title: "Karyawan"
     },
     {
@@ -52,6 +54,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
         />
       ),
       pathName: "/role",
+      activePattern: /^\/role\/?.*/i,
       title: "Role"
     },
     {
@@ -60,7 +63,8 @@ function Sidebar({ isCollapse }: SidebarProps) {
           className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
         />
       ),
-      pathName: "#",
+      pathName: "/user",
+      activePattern: /^\/user\/?.*/i,
       title: "User"
     }
   ]
@@ -114,7 +118,8 @@ function Sidebar({ isCollapse }: SidebarProps) {
         {/* Sidebar Menu List */}
         <ul>
           {sidebarMenuList.map((menu, index) => {
-            const isActive = currentPathName === menu.pathName
+            const isActive = menu.activePattern.test(currentPathName ?? "")
+
             return (
               <li
                 key={index}

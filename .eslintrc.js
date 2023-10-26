@@ -34,7 +34,7 @@ module.exports = {
     // don't add unecessary parens
     "no-extra-parens": ["error", "all", {
       "ignoreJSX": "multi-line",
-      "returnAssign": true,
+      "returnAssign": false,
       "conditionalAssign": true,
       "nestedBinaryExpressions": false,
       "enforceForArrowConditionals": false,
