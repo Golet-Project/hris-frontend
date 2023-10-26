@@ -13,6 +13,8 @@ export type UserRole = {
 
 export type FindAllUserRoleFilter = {
   search?: string
+  status?: string
+  role?: string
 }
 
 export type FindAllUserRoleResponse = UserRole[]
@@ -51,8 +53,20 @@ export function findAllUserRole(filter?: FindAllUserRoleFilter): FindAllUserRole
 
   let filtered: FindAllUserRoleResponse = data
   if (filter?.search) {
-    filtered = data.filter((v) => {
+    filtered = filtered.filter((v) => {
       return v.role.toLowerCase() === filter.search?.toLocaleLowerCase()
+    })
+  }
+
+  if (filter?.status) {
+    filtered = filtered.filter((v) => {
+      return v.status.toLowerCase() === filter.status?.toLocaleLowerCase()
+    })
+  }
+
+  if (filter?.role) {
+    filtered = filtered.filter((v) => {
+      return v.role.toLowerCase() === filter.role?.toLocaleLowerCase()
     })
   }
 

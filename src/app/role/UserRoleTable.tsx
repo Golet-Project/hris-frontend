@@ -15,7 +15,6 @@ import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { isEmpty } from "@/lib/utils"
 
 export type UserRoleRow = {
   role: string
@@ -30,9 +29,9 @@ type UserRoleTableProps = {
 }
 
 const filterSchema = z.object({
-  status: z.number().optional(),
+  status: z.string().optional(),
   role: z.string().optional(),
-  search: z.string().max(100, "Kata kunci tidak boleh lebih dari 100").optional()
+  search: z.string().max(3, "Kata kunci tidak boleh lebih dari 100").optional()
 })
 
 type FilterSchema = z.infer<typeof filterSchema>
@@ -78,41 +77,25 @@ export function UserRoleTable(props: UserRoleTableProps) {
 
   // state
   const [filter, setFilter] = useState<FilterSchema>({})
-  const [filterValidationError, setFilterValidationError] = useState(false)
   const [data, setData] = useState(props.data)
-  const componentDidMount = useRef(false)
+  const shouldFetchData = useRef(false)
 
   const form = useForm<FilterSchema>({
     resolver: zodResolver(filterSchema),
-    mode: "onChange"
+    mode: "onChange",
+    defaultValues: {}
   })
-  const formState = form.formState
-
-  // state for filter validation error
-  useEffect(() => {
-    if (!isEmpty(formState.errors)) {
-      setFilterValidationError(true)
-    } else {
-      setFilterValidationError(false)
-    }
-  }, [formState])
+  const { isValid } = form.formState
 
   // state for filter changes
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>
 
-    if (componentDidMount.current && isEmpty(formState.errors)) {
-      const filterValue: FilterSchema = {}
+    if (isValid) {
+      const filterValue = form.getValues()
 
-      if (filter.search) {
-        filterValue.search = filter.search
-      }
-
-      if (filter.role !== "") {
-        filterValue.role = filter.role
-      }
-
-      if (!filterValidationError) {
+      // prevent fetching data during initial render
+      if (shouldFetchData.current) {
         timeoutId = setTimeout(() => {
           const response = findAllUserRole(filterValue)
 
@@ -123,12 +106,12 @@ export function UserRoleTable(props: UserRoleTableProps) {
           setData(responseData)
         }, 700)
       }
+
+      shouldFetchData.current = true
     }
 
-    componentDidMount.current = true
-
     return () => clearTimeout(timeoutId)
-  }, [filter, filterValidationError])
+  }, [filter, isValid])
 
   const table = useReactTable({
     data: data,
@@ -168,9 +151,13 @@ export function UserRoleTable(props: UserRoleTableProps) {
             <FormField
               name="role"
               control={form.control}
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={(e) => setFilter((prev) => ({ ...prev, role: e }))}>
+                  <Select
+                    onValueChange={(e) => {
+                      setFilter((prev) => ({ ...prev, role: e }))
+                      field.onChange(e)
+                    }}>
                     <FormControl>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Role" />
@@ -181,8 +168,9 @@ export function UserRoleTable(props: UserRoleTableProps) {
                       <SelectGroup>
                         <CustomSelectLabel>Role</CustomSelectLabel>
 
-                        <SelectItem value="active">Aktif</SelectItem>
-                        <SelectItem value="nonactive">Nonaktif</SelectItem>
+                        <SelectItem value="Admin">Admin</SelectItem>
+                        <SelectItem value="Super Admin">Super Admin</SelectItem>
+                        <SelectItem value="Finance">Finance</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -192,20 +180,36 @@ export function UserRoleTable(props: UserRoleTableProps) {
               )}
             />
 
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
+            <FormField
+              name="status"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={(e) => {
+                      setFilter((prev) => ({ ...prev, status: e }))
+                      field.onChange(e)
+                    }}>
+                    <FormControl>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                    </FormControl>
 
-              <SelectContent>
-                <SelectGroup>
-                  <CustomSelectLabel>Status</CustomSelectLabel>
+                    <SelectContent>
+                      <SelectGroup>
+                        <CustomSelectLabel>Status</CustomSelectLabel>
 
-                  <SelectItem value="active">Aktif</SelectItem>
-                  <SelectItem value="nonactive">Nonaktif</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+                        <SelectItem value="Aktif">Aktif</SelectItem>
+                        <SelectItem value="Nonaktif">Nonaktif</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="flex justify-end gap-4">
@@ -238,7 +242,7 @@ export function UserRoleTable(props: UserRoleTableProps) {
                 </FormItem>
               )}
             />
-            <Link href="#">Tambah Role</Link>
+            <Link href="/role/add">Tambah Role</Link>
           </div>
         </Form>
       </div>

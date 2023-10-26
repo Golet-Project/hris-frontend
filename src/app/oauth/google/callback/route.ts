@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     return redirect("/auth/login")
   }
 
-  const json = (await response.json()) as HttpBaseResponseBodyJson<ExchangeResponse>
+  const json = (await response.json()) as Required<HttpBaseResponseBodyJson<ExchangeResponse>>
 
   // make a cookies
   const now = new Date()

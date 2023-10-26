@@ -29,7 +29,7 @@ export type HttpResponseError = {
 
 export type HttpBaseResponseBodyJson<T> = {
   message: string
-  data: T
+  data?: T
 }
 
 //=== ERROR ===
