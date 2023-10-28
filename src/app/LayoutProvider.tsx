@@ -82,8 +82,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           // expand
           "left-0 w-[280px]": !isCollapse
         }
-      )}
-    >
+      )}>
       {/* Logo wrapper */}
       <div className="p-1 justify-center flex">
         <Image
@@ -93,8 +92,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           width={30}
           height={10}
           className="
-              inline"
-        ></Image>
+              inline"></Image>
         <h1
           className={cn(
             "inline",
@@ -107,8 +105,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
             {
               hidden: isCollapse
             }
-          )}
-        >
+          )}>
           HROOST
         </h1>
       </div>
@@ -136,8 +133,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
                     // expand
                     "px-5": !isCollapse
                   }
-                )}
-              >
+                )}>
                 <Link className={!isCollapse ? "flex items-center" : ""} href={menu.pathName ? menu.pathName : "#"}>
                   {menu.icon}
                   <span>{menu.title}</span>
@@ -184,8 +180,7 @@ export default function LayoutProvider({ children, isAuthenticated }: ProviderPr
 
               // expand
               "ml-[280px]": !isCollapse
-            })}
-          >
+            })}>
             {/* Collapse Button */}
             <span
               className={cn(
@@ -196,8 +191,7 @@ export default function LayoutProvider({ children, isAuthenticated }: ProviderPr
                   "rotate-180 -left-2 lg:-left-5": isCollapse
                 }
               )}
-              onClick={() => setIsCollapse(!isCollapse)}
-            >
+              onClick={() => setIsCollapse(!isCollapse)}>
               <RxDoubleArrowLeft />
             </span>
             {/* Top Bar */}

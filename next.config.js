@@ -1,11 +1,7 @@
 // require("dotenv").config()
 /** @type {import('next').NextConfig} */
 
-let config = {
-  experimental: {
-    serverActions: true,
-  },
-}
+let config = {}
 
 if (process.env.NODE_ENV === "development") {
   const withBundleAnalyzer = require("@next/bundle-analyzer")({

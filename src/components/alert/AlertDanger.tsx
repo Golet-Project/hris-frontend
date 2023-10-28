@@ -21,8 +21,7 @@ export default function AlertDanger(props: AlertDangerProps) {
           "rounded-tr-lg rounded-br-lg",
           "cursor-pointer hover:bg-red-300"
         )}
-        onClick={props.handleDismiss}
-      >
+        onClick={props.handleDismiss}>
         <IoClose className="mx-auto" />
       </span>
     </figure>

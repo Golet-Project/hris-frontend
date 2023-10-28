@@ -57,7 +57,7 @@ export default function Page() {
                 <div className="col-span-2 p-2 bg-white h-full">
                   <ul>
                     {featureAccessMenu.map((feature) => {
-                      return <FeatureItem id={feature.id} name={feature.name} />
+                      return <FeatureItem key={feature.id} id={feature.id} name={feature.name} />
                     })}
                   </ul>
                 </div>

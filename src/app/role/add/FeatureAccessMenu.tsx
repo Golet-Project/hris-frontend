@@ -53,8 +53,7 @@ export function FeatureAccessMenuProvider(props: FeatureAccessMenuProviderProps)
         className={cn("grid grid-cols-8 gap-4 h-full", {
           "ring-1 ring-red-400": formState.errors.accessMenuId,
           "mt-4": !formState.errors.accessMenuId
-        })}
-      >
+        })}>
         {props.children}
       </div>
     </FeatureContext.Provider>
@@ -78,8 +77,7 @@ export function FeatureItem(props: FeatureListsProps) {
       className={cn("hover:bg-primary hover:text-white hover:opacity-80 px-4 py-2 cursor-pointer rounded-lg", {
         "bg-primary text-white": featureId === props.id
       })}
-      onClick={() => handleClick(props.id)}
-    >
+      onClick={() => handleClick(props.id)}>
       {props.name}
     </li>
   )
