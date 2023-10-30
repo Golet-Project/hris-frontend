@@ -12,6 +12,7 @@ import { BiSearch } from "react-icons/bi"
 import { FaUserTie } from "react-icons/fa6"
 import { RxDoubleArrowLeft } from "react-icons/rx"
 import { Input } from "@/components/ui/input"
+import { AuthContext } from "@/context/authContext"
 
 const menuIconClassName = {
   collapse: ["block", "mx-auto", "mb-1"],
@@ -82,8 +83,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           // expand
           "left-0 w-[280px]": !isCollapse
         }
-      )}
-    >
+      )}>
       {/* Logo wrapper */}
       <div className="p-1 justify-center flex">
         <Image
@@ -93,8 +93,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
           width={30}
           height={10}
           className="
-              inline"
-        ></Image>
+              inline"></Image>
         <h1
           className={cn(
             "inline",
@@ -107,8 +106,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
             {
               hidden: isCollapse
             }
-          )}
-        >
+          )}>
           HROOST
         </h1>
       </div>
@@ -136,8 +134,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
                     // expand
                     "px-5": !isCollapse
                   }
-                )}
-              >
+                )}>
                 <Link className={!isCollapse ? "flex items-center" : ""} href={menu.pathName ? menu.pathName : "#"}>
                   {menu.icon}
                   <span>{menu.title}</span>
@@ -168,46 +165,50 @@ type ProviderProps = {
   isAuthenticated: boolean
 }
 
-export default function LayoutProvider({ children, isAuthenticated }: ProviderProps) {
+function renderDashboard({ children, isAuthenticated }: ProviderProps) {
   //== State ===
   const [isCollapse, setIsCollapse] = useState(false)
 
-  return (() => {
-    if (isAuthenticated) {
-      return (
-        <div className={cn("2xl:max-w-[1900px]", "m-auto", "min-h-screen", "relative")}>
-          <Sidebar isCollapse={isCollapse} />
-          <main
-            className={cn("p-4", "transition-all duration-300 ease-in-out relative", {
-              // collapse
-              "ml-0 lg:ml-[80px]": isCollapse,
+  return (
+    <AuthContext.Provider value={{ authenticated: isAuthenticated }}>
+      <div className={cn("2xl:max-w-[1900px]", "m-auto", "min-h-screen", "relative")}>
+        <Sidebar isCollapse={isCollapse} />
+        <main
+          className={cn("p-4", "transition-all duration-300 ease-in-out relative", {
+            // collapse
+            "ml-0 lg:ml-[80px]": isCollapse,
 
-              // expand
-              "ml-[280px]": !isCollapse
-            })}
-          >
-            {/* Collapse Button */}
-            <span
-              className={cn(
-                "p-2 text-2xl font-semibold border border-white bg-white rounded-full cursor-pointer", // decorating
-                "hover:bg-primary hover:opacity-80 hover:text-white", // decorating
-                "block absolute top-9 -left-5", // positioning
-                {
-                  "rotate-180 -left-2 lg:-left-5": isCollapse
-                }
-              )}
-              onClick={() => setIsCollapse(!isCollapse)}
-            >
-              <RxDoubleArrowLeft />
-            </span>
-            {/* Top Bar */}
-            <TopBar />
-            {children}
-          </main>
-        </div>
-      )
-    } else {
-      return <>{children}</>
-    }
-  })()
+            // expand
+            "ml-[280px]": !isCollapse
+          })}>
+          {/* Collapse Button */}
+          <span
+            className={cn(
+              "p-2 text-2xl font-semibold border border-white bg-white rounded-full cursor-pointer", // decorating
+              "hover:bg-primary hover:opacity-80 hover:text-white", // decorating
+              "block absolute top-9 -left-5", // positioning
+              {
+                "rotate-180 -left-2 lg:-left-5": isCollapse
+              }
+            )}
+            onClick={() => setIsCollapse(!isCollapse)}>
+            <RxDoubleArrowLeft />
+          </span>
+          {/* Top Bar */}
+          <TopBar />
+          {children}
+        </main>
+      </div>
+    </AuthContext.Provider>
+  )
+}
+
+export default function AppProvider({ children, isAuthenticated }: ProviderProps) {
+  const pathName = usePathname()
+
+  if (pathName?.startsWith("/auth")) {
+    return <>{children}</>
+  } else {
+    return renderDashboard({ children, isAuthenticated })
+  }
 }

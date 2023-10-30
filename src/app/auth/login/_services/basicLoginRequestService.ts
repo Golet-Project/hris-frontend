@@ -1,7 +1,7 @@
 "use server"
 
-import { APP_ID } from "@/lib/constant"
-import { HttpBaseResponseBodyJson, HttpResponse, proxyUrl } from "@/lib/http"
+import { API_BASE_URL, APP_ID, APP_DOMAIN } from "@/lib/constant"
+import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
 import { cookies, headers } from "next/headers"
 
 type BasicLoginIn = {
@@ -22,7 +22,8 @@ type SubmitFormOut = HttpResponse
  * @returns error or success object
  */
 export default async function basicLoginRequest(params: BasicLoginIn): Promise<SubmitFormOut> {
-  const url = proxyUrl("/auth/login")
+  const cookieStore = cookies()
+  const url = new URL(API_BASE_URL + "/auth/login")
   const headerList = headers()
   const body = {
     email: params.email,
@@ -35,6 +36,7 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
       headers: {
         "Content-Type": "application/json",
         "X-App-ID": APP_ID,
+        "X-Domain": APP_DOMAIN,
         "User-Agent": headerList.get("user-agent") ?? ""
       },
       body: JSON.stringify(body),
@@ -61,7 +63,7 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
     cookiesExpiredIn.setTime(time + 1000 * 604800)
 
     if (json.data !== undefined) {
-      cookies().set({
+      cookieStore.set({
         name: "token",
         value: json.data.access_token,
         httpOnly: true,
