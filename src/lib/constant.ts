@@ -8,3 +8,4 @@ export const GOOGLE_OAUTH_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_RE
 export const GOOGLE_OAUTH_SCOPE = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_SCOPE ?? ""
 
 export const APP_ID = process.env.APP_ID ?? ""
+export const APP_DOMAIN = process.env.APP_DOMAIN ?? ""
