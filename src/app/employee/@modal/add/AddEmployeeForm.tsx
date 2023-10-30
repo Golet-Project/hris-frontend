@@ -44,8 +44,7 @@ export default function AddEmployeeForm() {
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )}
-          ></FormField>
+            )}></FormField>
 
           {/* Email */}
           <FormField
@@ -59,8 +58,7 @@ export default function AddEmployeeForm() {
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )}
-          ></FormField>
+            )}></FormField>
 
           {/* Birth Date */}
           <FormField
@@ -74,8 +72,7 @@ export default function AddEmployeeForm() {
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )}
-          ></FormField>
+            )}></FormField>
 
           {/* gender */}
           <FormField
@@ -97,8 +94,7 @@ export default function AddEmployeeForm() {
                   </SelectContent>
                 </Select>
               </FormItem>
-            )}
-          ></FormField>
+            )}></FormField>
         </div>
         <Button className="mt-4 align-items-end float-right" type="submit">
           Simpan

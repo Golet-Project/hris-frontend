@@ -20,8 +20,7 @@ export default function Page() {
         bg-manatee
         relative
         rounded-tl-[10%]
-        rounded-br-[10%]"
-        >
+        rounded-br-[10%]">
           <Image
             src="/static/images/people-in-desk.svg"
             alt="Person in the front of desk"
@@ -35,16 +34,14 @@ export default function Page() {
            lg:max-w-[80%] lg:left-12
 
             xl:left-16 xl:max-w-[85%]
-            2xl:left-24"
-          ></Image>
+            2xl:left-24"></Image>
         </div>
 
         <div
           className="
         lg:ml-4 flex flex-col p-4 sm:p-8
         lg:w-2/5
-        2xl:w-1/3"
-        >
+        2xl:w-1/3">
           <Image src="/static/images/logo-md.svg" alt="Logo" width={271} height={115} className="mx-auto"></Image>
 
           <div className="lg:mt-9 xl:mt-18 p-6">
