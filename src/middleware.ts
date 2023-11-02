@@ -21,6 +21,15 @@ export function middleware(req: NextRequest) {
     }
   }
 
+  if (nextUrl.pathname === "/auth/password-recovery") {
+    customHeaders.set("x-isAuthenticated", "false")
+    return NextResponse.next({
+      request: {
+        headers: customHeaders
+      }
+    })
+  }
+
   if (nextUrl.pathname === "/auth/login" || nextUrl.pathname.startsWith("/oauth")) {
     if (token === undefined) {
       customHeaders.set("x-isAuthenticated", "false")
