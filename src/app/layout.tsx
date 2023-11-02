@@ -1,8 +1,7 @@
 import "@/styles/globals.css"
 import localFont from "next/font/local"
-import { cookies } from "next/headers"
+import { headers } from "next/headers"
 import AppProvider from "./AppProvider"
-import { jwtDecode } from "jwt-decode"
 
 type RootProps = {
   children: React.ReactNode
@@ -20,16 +19,8 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }: RootProps) {
-  const cookieStore = cookies()
-  const token = cookieStore.get("token")
-  let isAuthenticated = false
-
-  if (token) {
-    const decoded = jwtDecode(token.value)
-    if (decoded.exp && decoded.exp * 1000 > Date.now()) {
-      isAuthenticated = true
-    }
-  }
+  const headerList = headers()
+  const isAuthenticated = (headerList.get("x-isAuthenticated") ?? "false") === "true"
 
   return (
     <html lang="en">
