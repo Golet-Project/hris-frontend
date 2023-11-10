@@ -28,6 +28,7 @@ export type HttpResponseError = {
 }
 
 export type HttpBaseResponseBodyJson<T> = {
+  error?: object
   message: string
   data?: T
 }
