@@ -5,7 +5,7 @@ import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
 import { getAccessToken, getUserAgent } from "@/lib/server-utils"
 
 type Employee = {
-  id: string
+  uid: string
   full_name: string
   gender: string
   age: number
@@ -22,7 +22,7 @@ type FindAllEmployeesOut = HttpResponse<FindEmployeesResponse>
 
 export default async function findAllEmployees(): Promise<FindAllEmployeesOut> {
   try {
-    const url = `${API_BASE_URL}/employees`
+    const url = `${API_BASE_URL}/employee`
 
     const token = getAccessToken()
     const userAgent = getUserAgent()

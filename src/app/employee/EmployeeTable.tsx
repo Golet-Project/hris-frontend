@@ -4,6 +4,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
 
 export type EmployeeRow = {
+  uid: string
   full_name: string
   gender: string
   age: number
@@ -35,7 +36,10 @@ const employeeColumn: ColumnDef<EmployeeRow>[] = [
   {
     id: "age",
     accessorKey: "age",
-    header: "Usia"
+    header: "Usia",
+    cell: ({ renderValue }) => {
+      return `${renderValue()} tahun`
+    }
   },
   {
     id: "email",
