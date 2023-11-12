@@ -16,7 +16,7 @@ type Employee = {
   employee_status: string
 }
 
-export type FindEmployeesResponse = Employee[]
+type FindEmployeesResponse = Employee[]
 
 type FindAllEmployeesOut = HttpResponse<FindEmployeesResponse>
 

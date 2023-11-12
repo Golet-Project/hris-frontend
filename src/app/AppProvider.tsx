@@ -7,6 +7,7 @@ import { useState } from "react"
 import { usePathname } from "next/navigation"
 
 import { BiHomeAlt, BiLockAlt } from "react-icons/bi"
+import { PiUserListDuotone } from "react-icons/pi"
 import { FiUserPlus } from "react-icons/fi"
 import { BiSearch } from "react-icons/bi"
 import { FaUserTie } from "react-icons/fa6"
@@ -47,6 +48,16 @@ function Sidebar({ isCollapse }: SidebarProps) {
       pathName: "/employee",
       activePattern: /^\/employee\/?.*/i,
       title: "Karyawan"
+    },
+    {
+      icon: (
+        <PiUserListDuotone
+          className={cn("text-lg lg:text-xl", isCollapse ? menuIconClassName.collapse : menuIconClassName.expand)}
+        />
+      ),
+      pathName: "/attendance",
+      activePattern: /^\/attendance\/?.*/i,
+      title: "Kehadiran"
     },
     {
       icon: (
