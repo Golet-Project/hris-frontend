@@ -11,6 +11,7 @@ type StoreRoleOut = HttpResponse
 export async function storeRole(role: StoreRoleIn): Promise<StoreRoleOut> {
   // TODO: implement API call to store role
 
+  // eslint-disable-next-line no-console
   await console.log(role)
   try {
     return new Promise((resolve) => {

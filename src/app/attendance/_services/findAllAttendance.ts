@@ -48,32 +48,6 @@ export async function findAllAttendance(): Promise<FindAllAttendanceOut> {
     return {
       success: json
     }
-
-    return {
-      success: {
-        message: "Success",
-        data: [
-          {
-            uid: "123",
-            full_name: "Bambang",
-            date: "2023-02-02",
-            checkin_time: "07:00",
-            checkout_time: "14:00",
-            approved_at: "2023-02-02 08:00",
-            approved_by: "Dimas"
-          },
-          {
-            uid: "321",
-            full_name: "Budi",
-            date: "2023-02-02",
-            checkin_time: "07:15",
-            checkout_time: "14:01",
-            approved_at: "2023-02-02 08:01",
-            approved_by: "Dimas"
-          }
-        ]
-      }
-    }
   } catch (error) {
     // TODO: proper error
     // eslint-disable-next-line no-console
