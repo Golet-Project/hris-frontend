@@ -68,6 +68,9 @@ dependencies:
   next:
     specifier: 13.4.13
     version: 13.4.13(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
+  next-nprogress-bar:
+    specifier: ^2.1.2
+    version: 2.1.2
   postcss:
     specifier: 8.4.24
     version: 8.4.24
@@ -4459,6 +4462,12 @@ packages:
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  /next-nprogress-bar@2.1.2:
+    resolution: {integrity: sha512-2Df5d7fr6uPx+BX8MkoWCfl+RjG+uWI5mA399e5sEe8mbT3q/GIUvCXLzBgJBIISpKuMmdLAOYEzqpjlsRVOWw==}
+    dependencies:
+      nprogress: 0.2.0
+    dev: false
+
   /next@13.4.13(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-A3YVbVDNeXLhWsZ8Nf6IkxmNlmTNz0yVg186NJ97tGZqPDdPzTrHotJ+A1cuJm2XfuWPrKOUZILl5iBQkIf8Jw==}
     engines: {node: '>=16.8.0'}
@@ -4526,6 +4535,10 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       path-key: 4.0.0
+    dev: false
+
+  /nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
     dev: false
 
   /object-assign@4.1.1:
