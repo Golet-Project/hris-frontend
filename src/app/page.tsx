@@ -84,25 +84,25 @@ export default function Page() {
           <section className="grid grid-cols-4 gap-4 mt-4">
             <div className={cn("p-4 bg-white", "col-span-1 rounded-lg")}>
               <p>User aktif</p>
-              <h1 className="text-xl font-bold">100.000</h1>
+              <h4>100.000</h4>
             </div>
             <div className={cn("p-4 bg-white", "col-span-1 rounded-lg")}>
               <p>User aktif</p>
-              <h1 className="text-xl font-semibold">100.000</h1>
+              <h4>100.000</h4>
             </div>
             <div className={cn("p-4 bg-white", "col-span-1 rounded-lg")}>
               <p>User aktif</p>
-              <h1 className="text-xl font-semibold">100.000</h1>
+              <h4>100.000</h4>
             </div>
             <div className={cn("p-4 bg-white", "col-span-1 rounded-lg")}>
               <p>User aktif</p>
-              <h1 className="text-xl font-semibold">100.000</h1>
+              <h4>100.000</h4>
             </div>
           </section>
 
           {/* Statistics */}
           <section className="p-6 bg-white mt-4 rounded-lg">
-            <h1 className="text-xl font-semibold mb-4">Statistik Perusahaan</h1>
+            <h4 className="font-semibold mb-4">Statistik Perusahaan</h4>
             <div className="overflow-auto">
               <StatisticChart data={data} />
             </div>
