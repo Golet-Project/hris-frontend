@@ -118,7 +118,7 @@ function Sidebar({ isCollapse }: SidebarProps) {
               hidden: isCollapse
             }
           )}>
-          HROOST
+          HROOST (tenant)
         </h1>
       </div>
 
