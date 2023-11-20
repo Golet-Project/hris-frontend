@@ -3,8 +3,8 @@
 
 let config = {
   experimental: {
-    serverActions: true,
-  },
+    serverActions: true
+  }
 }
 
 if (process.env.NODE_ENV === "development") {

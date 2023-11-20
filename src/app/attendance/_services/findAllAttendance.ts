@@ -1,3 +1,5 @@
+"use server"
+
 import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
 import { API_BASE_URL, APP_ID } from "@/lib/constant"
 import { getAccessToken, getUserAgent } from "@/lib/server-utils"
@@ -5,7 +7,6 @@ import { getAccessToken, getUserAgent } from "@/lib/server-utils"
 type Attendance = {
   uid: string
   full_name: string
-  date: string
   checkin_time: string
   checkout_time: string
   approved_at: string

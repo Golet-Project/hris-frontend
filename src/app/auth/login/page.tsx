@@ -45,7 +45,7 @@ export default function Page() {
           <Image src="/static/images/logo-md.svg" alt="Logo" width={271} height={115} className="mx-auto"></Image>
 
           <div className="lg:mt-9 xl:mt-18 p-6">
-            <h3>Selamat datang di Aplikasi manajemen karyawan HROOST</h3>
+            <h3>Hai admin Tenant! Selamat datang di Aplikasi manajemen karyawan HROOST</h3>
             <p className="mt-4">Masuk menggunakan e-mail atau Google</p>
 
             <LoginForm />

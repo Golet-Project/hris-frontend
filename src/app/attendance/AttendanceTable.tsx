@@ -2,11 +2,12 @@
 
 import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
+import { DateTime } from "luxon"
+import { FindAllAttendanceResponse } from "./_services/findAllAttendance"
 
 export type AttendanceRow = {
   uid: string
   full_name: string
-  date: string
   checkin_time: string
   checkout_time: string
   approved_at: string
@@ -28,18 +29,39 @@ const attendanceColumn: ColumnDef<AttendanceRow>[] = [
   },
   {
     id: "date",
-    accessorKey: "date",
-    header: "Tanggal"
+    accessorKey: "checkin_time",
+    header: "Tanggal",
+    cell: ({ renderValue }) => {
+      const time = renderValue<string>()
+      const dt = DateTime.fromISO(time, { zone: "utc" }).toLocal().setLocale("id")
+      if (!dt.isValid) return "-"
+
+      return dt.toFormat("yyyy-LL-dd")
+    }
   },
   {
     id: "checkin_time",
     accessorKey: "checkin_time",
-    header: "Absen Masuk"
+    header: "Absen Masuk",
+    cell: ({ renderValue }) => {
+      const time = renderValue<string>()
+      const dt = DateTime.fromISO(time, { zone: "utc" }).toLocal().setLocale("id")
+      if (!dt.isValid) return "-"
+
+      return `${dt.toFormat("HH:mm:ss")} ${dt.offsetNameShort}`
+    }
   },
   {
     id: "checkout_time",
     accessorKey: "checkout_time",
-    header: "Absen Keluar"
+    header: "Absen Keluar",
+    cell: ({ renderValue }) => {
+      const time = renderValue<string>()
+      const dt = DateTime.fromISO(time, { zone: "utc" }).toLocal().setLocale("id")
+      if (!dt.isValid) return "-"
+
+      return `${dt.toFormat("HH:mm:ss")} ${dt.offsetNameShort}`
+    }
   },
   {
     id: "approved_at",
@@ -54,7 +76,7 @@ const attendanceColumn: ColumnDef<AttendanceRow>[] = [
 ]
 
 type AttendanceTableProps = {
-  data: AttendanceRow[]
+  data: FindAllAttendanceResponse
 }
 
 export function AttendanceTable(props: AttendanceTableProps) {
