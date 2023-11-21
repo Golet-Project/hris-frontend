@@ -1,7 +1,8 @@
 "use server"
 
 import { API_BASE_URL, APP_ID, APP_DOMAIN } from "@/lib/constant"
-import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
+import { HttpBaseResponseBodyJson, HttpResponse, HttpStatusCode } from "@/lib/http"
+import { jwtDecode } from "jwt-decode"
 import { cookies, headers } from "next/headers"
 
 type BasicLoginIn = {
@@ -57,22 +58,45 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
     }
 
     const json = (await response.json()) as HttpBaseResponseBodyJson<LoginActionApiResponse>
+    if (json.data === undefined) {
+      throw new Error("required response data")
+    }
+
+    // set expire base on token ttl
+    const decodedToken = jwtDecode(json.data.access_token)
 
     const cookiesExpiredIn = new Date()
-    const time = cookiesExpiredIn.getTime()
-    cookiesExpiredIn.setTime(time + 1000 * 604800)
+    const now = cookiesExpiredIn.getTime()
 
-    if (json.data !== undefined) {
-      cookieStore.set({
-        name: "token",
-        value: json.data.access_token,
-        httpOnly: true,
-        sameSite: "lax",
-        expires: cookiesExpiredIn,
-        path: "/"
-        // TODO: add secure option
-      })
+    cookiesExpiredIn.setTime(now + 1000 * 86400) // set to default 1 day
+
+    if (decodedToken.exp) {
+      const tokenExpInMillis = decodedToken.exp * 1000
+
+      // if returned token already expired
+      if (tokenExpInMillis <= now) {
+        return {
+          error: {
+            message: "token is expired",
+            code: HttpStatusCode.Unauthorized
+          },
+          success: undefined
+        }
+      }
+
+      // otherwise, set expires in 5 minutes before the token age -
+      cookiesExpiredIn.setTime(tokenExpInMillis - 5 * 60 * 1000)
     }
+
+    cookieStore.set({
+      name: "token",
+      value: json.data.access_token,
+      httpOnly: true,
+      sameSite: "lax",
+      expires: cookiesExpiredIn,
+      path: "/"
+      // TODO: add secure option
+    })
 
     return {
       success: {

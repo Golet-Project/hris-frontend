@@ -21,6 +21,7 @@ export function middleware(req: NextRequest) {
     }
   }
 
+  // ignore token for password-recovery request
   if (nextUrl.pathname === "/auth/password-recovery") {
     customHeaders.set("x-isAuthenticated", "false")
     return NextResponse.next({
@@ -30,7 +31,9 @@ export function middleware(req: NextRequest) {
     })
   }
 
+  // if the path is part of auth
   if (nextUrl.pathname === "/auth/login" || nextUrl.pathname.startsWith("/oauth")) {
+    // next, if token doesn't exists
     if (token === undefined) {
       customHeaders.set("x-isAuthenticated", "false")
       return NextResponse.next({
@@ -40,6 +43,7 @@ export function middleware(req: NextRequest) {
       })
     }
 
+    // delete the token if it is not valid
     if (!isTokenValid) {
       req.cookies.delete("token")
       customHeaders.set("x-isAuthenticated", "false")
@@ -53,7 +57,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url))
   }
 
-  if (token === undefined) {
+  if (token === undefined || !isTokenValid) {
     return NextResponse.redirect(new URL("/auth/login", req.url))
   }
 
