@@ -7,5 +7,5 @@ export const GOOGLE_OAUTH_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIEN
 export const GOOGLE_OAUTH_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_REDIRECT_URI ?? ""
 export const GOOGLE_OAUTH_SCOPE = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_SCOPE ?? ""
 
-export const APP_ID = process.env.APP_ID ?? ""
-export const APP_DOMAIN = process.env.APP_DOMAIN ?? ""
+export const APP_ID = process.env.NEXT_PUBLIC_APP_ID ?? ""
+export const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN ?? ""
