@@ -28,9 +28,9 @@ export type HttpResponseError = {
 }
 
 export type HttpBaseResponseBodyJson<T> = {
-  error?: object
-  message: string
-  data?: T
+  readonly error?: object
+  readonly message: string
+  readonly data: T
 }
 
 //=== ERROR ===

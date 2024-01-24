@@ -6,9 +6,6 @@ type Props = {
 export default function EmployeeLayout(props: Props) {
   return (
     // wrapper
-    <div className="mt-6 relative min-h-screen">
-      {props.modal}
-      {props.children}
-    </div>
+    <div className="mt-4 relative min-h-screen">{props.children}</div>
   )
 }

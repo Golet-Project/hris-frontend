@@ -58,9 +58,6 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
     }
 
     const json = (await response.json()) as HttpBaseResponseBodyJson<LoginActionApiResponse>
-    if (json.data === undefined) {
-      throw new Error("required response data")
-    }
 
     // set expire base on token ttl
     const decodedToken = jwtDecode(json.data.access_token)

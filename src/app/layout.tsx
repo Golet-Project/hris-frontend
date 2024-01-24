@@ -25,6 +25,7 @@ export default function RootLayout({ children }: RootProps) {
 
   return (
     <html lang="en">
+      <link rel="shortcut icon" href="/static/images/favicon.ico" />
       <body className={inter.className}>
         <LoadingBar />
         <AppProvider isAuthenticated={isAuthenticated}>{children}</AppProvider>
