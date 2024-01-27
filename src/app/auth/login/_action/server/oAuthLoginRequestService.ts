@@ -10,6 +10,7 @@ type OAuthLoginRespose = {
 
 type OAuthLoginOut = HttpResponse<OAuthLoginRespose>
 
+// NOTE: currently not used
 export default async function oAuthLoginRequest(): Promise<OAuthLoginOut> {
   const url = proxyUrl("/oauth/google/login")
   const headerList = headers()

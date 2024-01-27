@@ -3,18 +3,10 @@
 import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
 import { DateTime } from "luxon"
-import { FindAllAttendanceResponse } from "./_services/findAllAttendance"
+import { FetchAttendanceTableDataResponse } from "./_action/server/attendanceTable"
+import { AttendanceTableRow } from "./_dto/attendance"
 
-export type AttendanceRow = {
-  uid: string
-  full_name: string
-  checkin_time: string
-  checkout_time: string
-  approved_at: string
-  approved_by: string
-}
-
-const attendanceColumn: ColumnDef<AttendanceRow>[] = [
+const attendanceColumn: ColumnDef<AttendanceTableRow>[] = [
   {
     id: "number",
     header: "No.",
@@ -76,7 +68,7 @@ const attendanceColumn: ColumnDef<AttendanceRow>[] = [
 ]
 
 type AttendanceTableProps = {
-  data: FindAllAttendanceResponse
+  data: FetchAttendanceTableDataResponse
 }
 
 export function AttendanceTable(props: AttendanceTableProps) {

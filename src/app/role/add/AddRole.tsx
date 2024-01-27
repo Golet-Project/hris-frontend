@@ -8,7 +8,7 @@ import { useFormContext } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
 import { AddRoleSchema } from "./_type/AddRoleSchema"
-import { storeRole } from "../_services/storeRole"
+import { storeRole } from "../_action/storeRole"
 
 // this component must be wrapped with AddRoleFormProvider
 export default function AddRole() {

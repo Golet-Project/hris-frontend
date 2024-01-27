@@ -18,7 +18,8 @@ export async function storeRole(role: StoreRoleIn): Promise<StoreRoleOut> {
       setTimeout(() => {
         resolve({
           success: {
-            message: "Role berhasil ditambahkan"
+            message: "Role berhasil ditambahkan",
+            data: undefined
           }
         })
       }, 5000)

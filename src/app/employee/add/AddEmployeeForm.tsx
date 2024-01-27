@@ -9,10 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/text-area"
 import { DatePicker } from "@/components/ui/date-picker"
-import { Province, Regency } from "@/entities"
+import { District, Province, Regency, Village } from "@/entities"
 import { HttpError } from "@/lib/http"
 import { useState } from "react"
-import { fetchRegencyByProvinceId } from "./_services/client/regionService"
+import {
+  handleFindDistrictByRegencyId,
+  handleFindRegencyByProvinceId,
+  handleFindVillageByDistrictId
+} from "./_action/client/addEmployeeForm"
 
 const addEmployeeSchema = z.object({
   firstName: z.string({ required_error: "Namad Depan wajib diisi" }).min(1, "Nama Depan wajib diisi").max(255),
@@ -43,18 +47,8 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
   })
 
   const [regencies, setRegencies] = useState<Regency[]>([])
-
-  const handleFindRegencyByProvinceId = async (provinceId: string) => {
-    const result = await fetchRegencyByProvinceId(provinceId)
-    if (result.error) {
-      alert(result.error.message)
-      return
-    }
-
-    if (result.success) {
-      setRegencies(result.success.data)
-    }
-  }
+  const [districts, setDistricts] = useState<District[]>([])
+  const [villages, setVillages] = useState<Village[]>([])
 
   const onSubmit = () => {
     try {
@@ -162,7 +156,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
             render={() => (
               <FormItem>
                 <FormLabel>Provinsi</FormLabel>
-                <Select onValueChange={handleFindRegencyByProvinceId}>
+                <Select onValueChange={(provinceId: string) => handleFindRegencyByProvinceId(provinceId, setRegencies)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue placeholder="Provinsi" />
@@ -187,11 +181,11 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="regencyId"
-            render={({ field }: { field: any }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Kabupaten</FormLabel>
 
-                <Select onValueChange={field.onChange}>
+                <Select onValueChange={(regencyId: string) => handleFindDistrictByRegencyId(regencyId, setDistricts)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue placeholder="Kabupaten" />
@@ -216,17 +210,25 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="districtId"
-            render={({ field }: { field: any }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Kecamatan</FormLabel>
-                <Select onValueChange={field.onChange}>
+                <Select onValueChange={(districtId: string) => handleFindVillageByDistrictId(districtId, setVillages)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue placeholder="Kecamatan" />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
-                  <SelectContent></SelectContent>
+                  <SelectContent>
+                    {districts.map((district: District) => {
+                      return (
+                        <SelectItem key={district.id} value={district.id}>
+                          {district.name}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
                 </Select>
               </FormItem>
             )}
@@ -246,7 +248,15 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
-                  <SelectContent></SelectContent>
+                  <SelectContent>
+                    {villages.map((village: Village) => {
+                      return (
+                        <SelectItem key={village.id} value={village.id}>
+                          {village.name}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
                 </Select>
               </FormItem>
             )}

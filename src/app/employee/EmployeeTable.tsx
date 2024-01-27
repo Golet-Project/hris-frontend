@@ -2,20 +2,9 @@
 
 import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
+import { EmployeeTableRow } from "./_dto/employee"
 
-export type EmployeeRow = {
-  uid: string
-  full_name: string
-  gender: string
-  age: number
-  email: string
-  phone_number: string
-  join_date: string
-  end_date: string
-  employee_status: string
-}
-
-const employeeColumn: ColumnDef<EmployeeRow>[] = [
+const employeeColumn: ColumnDef<EmployeeTableRow>[] = [
   {
     id: "number",
     header: "No.",
@@ -69,7 +58,7 @@ const employeeColumn: ColumnDef<EmployeeRow>[] = [
 ]
 
 type EmployeeTableProps = {
-  data: EmployeeRow[]
+  data: EmployeeTableRow[]
 }
 
 export function EmployeeTable(props: EmployeeTableProps) {

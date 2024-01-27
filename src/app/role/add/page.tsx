@@ -1,6 +1,6 @@
 import FormProvider from "./FormProvider"
 import AddRole from "./AddRole"
-import { findAccessMenu } from "../_services/findAccessMenu"
+import { findAccessMenu } from "../_action/findAccessMenu"
 import { FeatureItem, FeatureAccessMenuProvider, AccessMenuList, ChooseAll } from "./FeatureAccessMenu"
 import { useMemo } from "react"
 

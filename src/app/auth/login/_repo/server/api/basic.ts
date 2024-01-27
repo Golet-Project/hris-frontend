@@ -1,34 +1,27 @@
 "use server"
 
-import { API_BASE_URL, APP_ID, APP_DOMAIN } from "@/lib/constant"
+import { API_BASE_URL, APP_DOMAIN, APP_ID } from "@/lib/constant"
 import { HttpBaseResponseBodyJson, HttpResponse, HttpStatusCode } from "@/lib/http"
 import { jwtDecode } from "jwt-decode"
 import { cookies, headers } from "next/headers"
 
-type BasicLoginIn = {
+type PostBasicLoginIn = {
   email: string
   password: string
 }
 
-type LoginActionApiResponse = {
+type PostBasciLoginResponse = {
   access_token: string
 }
 
-type SubmitFormOut = HttpResponse
+type PostBasicLoginOut = HttpResponse
 
-/**
- * Handle an action to make a HTTP request to obtain a access token
- *
- * @param params request payload
- * @returns error or success object
- */
-export default async function basicLoginRequest(params: BasicLoginIn): Promise<SubmitFormOut> {
-  const cookieStore = cookies()
+export async function postBasicLogin(req: PostBasicLoginIn): Promise<PostBasicLoginOut> {
   const url = new URL(API_BASE_URL + "/auth/login")
   const headerList = headers()
-  const body = {
-    email: params.email,
-    password: params.password
+  const requestBody = {
+    email: req.email,
+    password: req.password
   }
 
   try {
@@ -40,11 +33,7 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
         "X-Domain": APP_DOMAIN,
         "User-Agent": headerList.get("user-agent") ?? ""
       },
-      body: JSON.stringify(body),
-
-      next: {
-        revalidate: 0
-      }
+      body: JSON.stringify(requestBody)
     })
 
     if (!response.ok) {
@@ -57,15 +46,16 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
       }
     }
 
-    const json = (await response.json()) as HttpBaseResponseBodyJson<LoginActionApiResponse>
+    const json = (await response.json()) as HttpBaseResponseBodyJson<PostBasciLoginResponse>
+    const cookiesStore = cookies()
 
-    // set expire base on token ttl
+    // set expire base on toke ttl
     const decodedToken = jwtDecode(json.data.access_token)
 
     const cookiesExpiredIn = new Date()
     const now = cookiesExpiredIn.getTime()
 
-    cookiesExpiredIn.setTime(now + 1000 * 86400) // set to default 1 day
+    cookiesExpiredIn.setTime(now + 1000 * 86400)
 
     if (decodedToken.exp) {
       const tokenExpInMillis = decodedToken.exp * 1000
@@ -85,7 +75,7 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
       cookiesExpiredIn.setTime(tokenExpInMillis - 5 * 60 * 1000)
     }
 
-    cookieStore.set({
+    cookiesStore.set({
       name: "token",
       value: json.data.access_token,
       httpOnly: true,
@@ -94,15 +84,14 @@ export default async function basicLoginRequest(params: BasicLoginIn): Promise<S
       path: "/"
       // TODO: add secure option
     })
-
     return {
       success: {
-        message: "Berhasil Login",
+        message: json.message,
         data: undefined
       }
     }
   } catch (error) {
-    // TODO: send to logger
+    // TODO: proper error
     // eslint-disable-next-line no-console
     console.log(error)
     throw error
