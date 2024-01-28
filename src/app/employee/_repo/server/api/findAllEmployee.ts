@@ -2,7 +2,7 @@
 
 import { API_BASE_URL, APP_ID } from "@/lib/constant"
 import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
-import { getAccessToken, getUserAgent } from "@/lib/server-utils"
+import { getAccessToken, getUserAgent } from "@/lib/server/utils"
 
 type Employee = {
   uid: string
@@ -20,14 +20,14 @@ type FindEmployeesResponse = Employee[]
 
 type FindAllEmployeesOut = HttpResponse<FindEmployeesResponse>
 
-export default async function findAllEmployees(): Promise<FindAllEmployeesOut> {
+export default async function findAllEmployee(): Promise<FindAllEmployeesOut> {
   try {
-    const url = `${API_BASE_URL}/employee`
+    const url = new URL("/employee", API_BASE_URL)
 
     const token = getAccessToken()
     const userAgent = getUserAgent()
 
-    // get the data
+    // find the data
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -55,7 +55,7 @@ export default async function findAllEmployees(): Promise<FindAllEmployeesOut> {
   } catch (error) {
     // TODO: proper error
     // eslint-disable-next-line no-console
-    console.log("Error", error)
+    console.log(error)
     throw error
   }
 }

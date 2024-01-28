@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { HiChevronRight } from "react-icons/hi"
 import AddEmployeeForm from "./AddEmployeeForm"
-import { findAllProvinces } from "./_services/findAllProvinces"
+import { fetchAllProvince } from "./_action/server/fetchAllProvince"
 import { Province } from "@/entities"
 
 export default async function Page() {
   // TODO: get the province
-  const provinceResponse = await findAllProvinces()
+  const provinceResponse = await fetchAllProvince()
   let provinceData: Province[] = []
   if (!provinceResponse.error) {
     provinceData = provinceResponse.success?.data ?? []

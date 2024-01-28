@@ -1,4 +1,4 @@
-import { findAllUserRole } from "./_services/findAllUserRole"
+import { findAllUserRole } from "./_action/findAllUserRole"
 import { UserRoleRow, UserRoleTable } from "./UserRoleTable"
 
 export default function Page() {

@@ -5,68 +5,23 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
-import * as z from "zod"
 
-import basicLoginRequest from "./_services/basicLoginRequestService"
-import { HttpError } from "@/lib/http"
-
-const loginSchema = z.object({
-  email: z.string().email("Email tidak valid"),
-  password: z
-    .string()
-    .regex(
-      /^(?=.*[A-Z])(?=.*\d).{8,}$/,
-      "Password harus terdiri dari 8 karakter, mengandung angka, dan setidaknya 1 huruf kapital"
-    )
-})
-
-type LoginSchema = z.infer<typeof loginSchema>
+import { BasicLoginSchema, basicLoginSchema } from "./_dto/basic"
+import { handleLogin, toggleShowPassword } from "./_action/client/loginForm"
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
 
-  const form = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema)
+  const form = useForm<BasicLoginSchema>({
+    resolver: zodResolver(basicLoginSchema)
   })
   const { isDirty, isValid, isSubmitting, isSubmitSuccessful } = form.formState
-
-  function toggleShowPassword() {
-    setShowPassword((prevState) => !prevState)
-  }
-
-  const onSubmit = async (values: LoginSchema) => {
-    try {
-      const response = await basicLoginRequest({
-        email: values.email,
-        password: values.password
-      })
-
-      if ("error" in response) {
-        alert(response.error?.message ?? "")
-        return
-      }
-
-      router.push("/")
-      return
-    } catch (error) {
-      if (error instanceof HttpError) {
-        // TODO: proper alert
-        alert(error.message)
-        return
-      }
-
-      /// TODO: proper alert
-      alert("internal server error")
-    }
-  }
 
   return (
     <>
       <Form {...form}>
-        <form className="lg:mt-9 xl:mt-10" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="lg:mt-9 xl:mt-10" onSubmit={form.handleSubmit(handleLogin)}>
           <FormField
             control={form.control}
             name="email"
@@ -98,7 +53,7 @@ export default function LoginForm() {
                     />
                     <button
                       type="button"
-                      onClick={toggleShowPassword}
+                      onClick={() => toggleShowPassword(setShowPassword)}
                       className="absolute top-1/2 right-0 -translate-y-1/2 flex items-center px-4 text-gray-600 h-max">
                       {showPassword ? (
                         <svg

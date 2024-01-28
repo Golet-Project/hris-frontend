@@ -1,35 +1,35 @@
 "use server"
 
-import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
-import { NewPasswordSchema } from "../_type/NewPasswordSchema"
 import { API_BASE_URL } from "@/lib/constant"
+import { HttpBaseResponseBodyJson, HttpResponse } from "@/lib/http"
 import { cookies } from "next/headers"
 
-type ChangePasswordIn = Omit<NewPasswordSchema, "confirmPassword"> & {
+type PostChangePasswordIn = {
+  password: string
   token: string
   uid: string
   cid: string
 }
 
-type ChangePasswordOut = HttpResponse<HttpBaseResponseBodyJson<null>>
+type PostChangePasswordOut = HttpResponse
 
-export async function changePassword(params: ChangePasswordIn): Promise<ChangePasswordOut> {
+export async function putChangePassword(data: PostChangePasswordIn): Promise<PostChangePasswordOut> {
   const cookieStore = cookies()
-  // api call
-  const url = new URL(API_BASE_URL + "/auth/password")
-  const body = {
-    password: params.password,
-    uid: params.uid
-  }
+
+  const url = new URL("/auth/password", API_BASE_URL)
+
   try {
     const response = await fetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": params.token,
-        "X-Cid": params.cid
+        "X-Api-Key": data.token,
+        "X-Cid": data.cid
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        password: data.password,
+        uid: data.uid
+      }),
 
       next: {
         revalidate: 0
@@ -38,6 +38,7 @@ export async function changePassword(params: ChangePasswordIn): Promise<ChangePa
 
     if (!response.ok) {
       const json = (await response.json()) as HttpBaseResponseBodyJson<null>
+
       return {
         error: {
           message: json.message,
@@ -48,16 +49,16 @@ export async function changePassword(params: ChangePasswordIn): Promise<ChangePa
 
     const json = (await response.json()) as HttpBaseResponseBodyJson<null>
 
-    // delete the cookies
     cookieStore.delete("token")
 
     return {
       success: {
-        message: json.message
+        message: json.message,
+        data: undefined
       }
     }
   } catch (error) {
-    // TODO: send to logger
+    // TODO: Proper error
     // eslint-disable-next-line no-console
     console.log(error)
     throw error

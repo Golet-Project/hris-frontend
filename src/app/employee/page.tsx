@@ -1,14 +1,9 @@
 import { Link } from "@/components/ui/button"
-import findAllEmployees from "./_services/findAllEmployees"
-import { EmployeeTable, EmployeeRow } from "./EmployeeTable"
+import { fetchAllEmployee } from "./_action/server/employee"
+import { EmployeeTable } from "./EmployeeTable"
 
 export default async function Page() {
-  const response = await findAllEmployees()
-
-  let data: EmployeeRow[] = []
-  if (!response.error) {
-    data = response.success?.data ?? []
-  }
+  const employees = await fetchAllEmployee()
 
   return (
     <div>
@@ -19,7 +14,7 @@ export default async function Page() {
       <div className="flex justify-end mb-4">
         <Link href="/employee/add">Tambah Karyawan</Link>
       </div>
-      <EmployeeTable data={data}></EmployeeTable>
+      <EmployeeTable data={employees}></EmployeeTable>
     </div>
   )
 }

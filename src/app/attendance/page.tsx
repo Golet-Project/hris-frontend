@@ -1,10 +1,10 @@
 import { AttendanceTable } from "./AttendanceTable"
-import { FindAllAttendanceResponse, findAllAttendance } from "./_services/findAllAttendance"
+import { FetchAttendanceTableDataResponse, fetchAttendanceTableData } from "./_action/server/attendanceTable"
 
 export default async function Page() {
-  const response = await findAllAttendance()
+  const response = await fetchAttendanceTableData()
 
-  let data: FindAllAttendanceResponse = []
+  let data: FetchAttendanceTableDataResponse = []
   if (!response.error) {
     data = response.success?.data ?? []
   }
