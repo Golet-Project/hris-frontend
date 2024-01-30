@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useState } from "react"
+import { useRouter } from "next-nprogress-bar"
 
 import { BasicLoginSchema, basicLoginSchema } from "./_dto/basic"
 import { handleLogin, toggleShowPassword } from "./_action/client/loginForm"
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
 
   const form = useForm<BasicLoginSchema>({
     resolver: zodResolver(basicLoginSchema)
@@ -21,7 +23,7 @@ export default function LoginForm() {
   return (
     <>
       <Form {...form}>
-        <form className="lg:mt-9 xl:mt-10" onSubmit={form.handleSubmit(handleLogin)}>
+        <form className="lg:mt-9 xl:mt-10" onSubmit={form.handleSubmit((data) => handleLogin(data, router))}>
           <FormField
             control={form.control}
             name="email"
