@@ -110,7 +110,8 @@ module.exports = {
 
     // Shadowing is the process by which a local variable shares the same name
     // as a variable in its containing scope
-    "no-shadow": ["warn"],
+    "no-shadow": ["off"],
+    "@typescript-eslint/no-shadow": ["warn"],
 
     // useless stuffs
     "no-useless-return": ["warn"],
@@ -174,8 +175,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': "error",
 
     "prettier/prettier": ["error", {
-     "trailingComma": "none",
-     "printWidth": 120
+      "trailingComma": "none",
+      "printWidth": 120
     }]
   },
 }

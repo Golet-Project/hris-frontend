@@ -13,7 +13,7 @@ import { SelectSingleEventHandler } from "react-day-picker"
 
 type DatePickerProps = {
   label: string
-  field: any
+  // field: any
   value?: Date
   onChange?: SelectSingleEventHandler
   className?: string
