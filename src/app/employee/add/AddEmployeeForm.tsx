@@ -3,42 +3,24 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/text-area"
 import { DatePicker } from "@/components/ui/date-picker"
 import { District, Province, Regency, Village } from "@/entities"
-import { HttpError } from "@/lib/http"
 import { Reducer, useReducer } from "react"
 import {
   RegionReducerAction,
   handleFindDistrictByRegencyId,
   handleFindRegencyByProvinceId,
   handleFindVillageByDistrictId,
+  handleSubmitForm,
   regionReducer
 } from "./_action/client/addEmployeeForm"
 import { RegionDto } from "./_dto/region"
-
-const addEmployeeSchema = z.object({
-  firstName: z.string({ required_error: "Namad Depan wajib diisi" }).min(1, "Nama Depan wajib diisi").max(255),
-  lastName: z.string({ required_error: "Nama Belakang wajib diisi" }).min(1, "Nama Depan wajib diisi").max(255),
-  email: z.string({ required_error: "Email wajib diisi" }).email("Email berupa email yang valid"),
-  birthDate: z.date({ required_error: "Tanggal Lahir wajib diisi", invalid_type_error: "Tanggal Lahir tidak valid" }),
-  addressDetail: z.string({ required_error: "Detail Alamat wajib diisi" }).min(1, "Detail Alamat wajib diisi").max(255),
-  provinceId: z.string({ required_error: "Provinsi wajib diisi" }).min(1, "Provinsi wajib diisi").max(2),
-  regencyId: z.string({ required_error: "Kabupaten wajib diisi" }).min(1, "Kabupaten wajib diisi").max(5),
-  districtId: z.string({ required_error: "Kecamatan wajib diisi" }).min(1, "Kecamatan wajib diisi").max(8),
-  villageId: z.string({ required_error: "Desa wajib diisi" }).min(1, "Desa wajib diisi").max(13),
-  joinDate: z.date({
-    required_error: "Tanggal Bergabung wajib diisi",
-    invalid_type_error: "Tanggal Bergabung tidak valid"
-  }),
-  gender: z.enum(["M", "F"], { required_error: "Jenis Kelamin wajib diisi" })
-})
-
-type AddEmployeeSchema = z.infer<typeof addEmployeeSchema>
+import { AddEmployeeSchema, addEmployeeSchema } from "./_dto/employee"
+import { useRouter } from "next-nprogress-bar"
 
 type AddEmployeeProps = {
   provinces: Province[]
@@ -48,6 +30,8 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
   const form = useForm<AddEmployeeSchema>({
     resolver: zodResolver(addEmployeeSchema)
   })
+  const { isDirty, isValid, isSubmitting, isSubmitSuccessful } = form.formState
+  const router = useRouter()
 
   const [state, dispatch] = useReducer<Reducer<RegionDto, RegionReducerAction>>(regionReducer, {
     provinces: props.provinces,
@@ -56,33 +40,19 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
     villages: []
   })
 
-  const onSubmit = () => {
-    try {
-    } catch (error) {
-      if (error instanceof HttpError) {
-        alert(error.message)
-        return
-      }
-
-      // TODO: proper log
-
-      alert("internal server error")
-    }
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit((data) => handleSubmitForm(data, router))}>
         <div className="grid grid-cols-2 gap-5">
           {/* Nama Depan */}
           <FormField
             control={form.control}
             name="firstName"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Nama Depan</FormLabel>
                 <FormControl className="my-2">
-                  <Input type="text" name="firstName" {...field} />
+                  <Input type="text" {...field} value={field.value ?? ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,11 +63,11 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="lastName"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Nama Belakang</FormLabel>
                 <FormControl className="my-2">
-                  <Input type="text" name="lastName" {...field} />
+                  <Input type="text" {...field} value={field.value ?? ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,11 +78,11 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="email"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl className="my-2">
-                  <Input type="email" name="email" {...field} />
+                  <Input type="email" {...field} value={field.value ?? ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -123,10 +93,10 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="birthDate"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Tanggal Lahir</FormLabel>
-                <DatePicker className="w-full" {...field} />
+                <DatePicker label="Tanggal Lahir" className="w-full" {...field} value={field.value ?? ""} />
                 <FormMessage />
               </FormItem>
             )}
@@ -136,7 +106,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="gender"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Jenis Kelamin</FormLabel>
                 <Select onValueChange={field.onChange}>
@@ -147,8 +117,8 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
                   </FormControl>
                   <FormMessage />
                   <SelectContent>
-                    <SelectItem value="L">Laki-Laki</SelectItem>
-                    <SelectItem value="P">Perempuan</SelectItem>
+                    <SelectItem value="M">Laki-Laki</SelectItem>
+                    <SelectItem value="F">Perempuan</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -159,10 +129,14 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="provinceId"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Provinsi</FormLabel>
-                <Select onValueChange={(provinceId: string) => handleFindRegencyByProvinceId(provinceId, dispatch)}>
+                <Select
+                  onValueChange={(provinceId: string) => {
+                    field.onChange(provinceId)
+                    handleFindRegencyByProvinceId(provinceId, dispatch)
+                  }}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue />
@@ -187,11 +161,15 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="regencyId"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Kabupaten</FormLabel>
 
-                <Select onValueChange={(regencyId: string) => handleFindDistrictByRegencyId(regencyId, dispatch)}>
+                <Select
+                  onValueChange={(regencyId: string) => {
+                    field.onChange(regencyId)
+                    handleFindDistrictByRegencyId(regencyId, dispatch)
+                  }}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue />
@@ -216,10 +194,14 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="districtId"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Kecamatan</FormLabel>
-                <Select onValueChange={(districtId: string) => handleFindVillageByDistrictId(districtId, dispatch)}>
+                <Select
+                  onValueChange={(districtId: string) => {
+                    field.onChange(districtId)
+                    handleFindVillageByDistrictId(districtId, dispatch)
+                  }}>
                   <FormControl className="my-2">
                     <SelectTrigger>
                       <SelectValue />
@@ -244,7 +226,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
           <FormField
             control={form.control}
             name="villageId"
-            render={({ field }: { field: any }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Desa/Kelurahan</FormLabel>
                 <Select onValueChange={field.onChange}>
@@ -292,8 +274,34 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
               </FormItem>
             )}
           />
+
+          {/* Status karyawan */}
+          <FormField
+            control={form.control}
+            name="employeeStatus"
+            render={({ field }: { field: any }) => (
+              <FormItem>
+                <FormLabel>Status Karyawan</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl className="my-2">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <FormMessage />
+                  <SelectContent>
+                    <SelectItem value="intern">Intern</SelectItem>
+                    <SelectItem value="fulltime">Full Time</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
         </div>
-        <Button className="mt-4 align-items-end float-right" type="submit">
+        <Button
+          className="mt-4 align-items-end float-right"
+          type="submit"
+          disabled={!isDirty || !isValid || isSubmitting || isSubmitSuccessful}>
           Simpan
         </Button>
       </form>
