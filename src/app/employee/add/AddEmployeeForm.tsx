@@ -11,12 +11,15 @@ import { Textarea } from "@/components/ui/text-area"
 import { DatePicker } from "@/components/ui/date-picker"
 import { District, Province, Regency, Village } from "@/entities"
 import { HttpError } from "@/lib/http"
-import { useState } from "react"
+import { Reducer, useReducer } from "react"
 import {
+  RegionReducerAction,
   handleFindDistrictByRegencyId,
   handleFindRegencyByProvinceId,
-  handleFindVillageByDistrictId
+  handleFindVillageByDistrictId,
+  regionReducer
 } from "./_action/client/addEmployeeForm"
+import { RegionDto } from "./_dto/region"
 
 const addEmployeeSchema = z.object({
   firstName: z.string({ required_error: "Namad Depan wajib diisi" }).min(1, "Nama Depan wajib diisi").max(255),
@@ -46,9 +49,12 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
     resolver: zodResolver(addEmployeeSchema)
   })
 
-  const [regencies, setRegencies] = useState<Regency[]>([])
-  const [districts, setDistricts] = useState<District[]>([])
-  const [villages, setVillages] = useState<Village[]>([])
+  const [state, dispatch] = useReducer<Reducer<RegionDto, RegionReducerAction>>(regionReducer, {
+    provinces: props.provinces,
+    regencies: [],
+    districts: [],
+    villages: []
+  })
 
   const onSubmit = () => {
     try {
@@ -120,7 +126,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
             render={({ field }: { field: any }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Tanggal Lahir</FormLabel>
-                <DatePicker label="Tanggal Lahir" className="w-full" {...field} />
+                <DatePicker className="w-full" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -136,7 +142,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
                 <Select onValueChange={field.onChange}>
                   <FormControl className="my-2">
                     <SelectTrigger>
-                      <SelectValue placeholder="Jenis Kelamin" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
@@ -156,10 +162,10 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
             render={() => (
               <FormItem>
                 <FormLabel>Provinsi</FormLabel>
-                <Select onValueChange={(provinceId: string) => handleFindRegencyByProvinceId(provinceId, setRegencies)}>
+                <Select onValueChange={(provinceId: string) => handleFindRegencyByProvinceId(provinceId, dispatch)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
-                      <SelectValue placeholder="Provinsi" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
@@ -185,15 +191,15 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
               <FormItem>
                 <FormLabel>Kabupaten</FormLabel>
 
-                <Select onValueChange={(regencyId: string) => handleFindDistrictByRegencyId(regencyId, setDistricts)}>
+                <Select onValueChange={(regencyId: string) => handleFindDistrictByRegencyId(regencyId, dispatch)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
-                      <SelectValue placeholder="Kabupaten" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
                   <SelectContent>
-                    {regencies.map((regency: Regency) => {
+                    {state.regencies.map((regency: Regency) => {
                       return (
                         <SelectItem key={regency.id} value={regency.id}>
                           {regency.name}
@@ -213,15 +219,15 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
             render={() => (
               <FormItem>
                 <FormLabel>Kecamatan</FormLabel>
-                <Select onValueChange={(districtId: string) => handleFindVillageByDistrictId(districtId, setVillages)}>
+                <Select onValueChange={(districtId: string) => handleFindVillageByDistrictId(districtId, dispatch)}>
                   <FormControl className="my-2">
                     <SelectTrigger>
-                      <SelectValue placeholder="Kecamatan" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
                   <SelectContent>
-                    {districts.map((district: District) => {
+                    {state.districts.map((district: District) => {
                       return (
                         <SelectItem key={district.id} value={district.id}>
                           {district.name}
@@ -244,12 +250,12 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
                 <Select onValueChange={field.onChange}>
                   <FormControl className="my-2">
                     <SelectTrigger>
-                      <SelectValue placeholder="Desa/Kelurahan" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <FormMessage />
                   <SelectContent>
-                    {villages.map((village: Village) => {
+                    {state.villages.map((village: Village) => {
                       return (
                         <SelectItem key={village.id} value={village.id}>
                           {village.name}
@@ -281,7 +287,7 @@ export default function AddEmployeeForm(props: AddEmployeeProps) {
             render={({ field }: { field: any }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Tanggal Masuk</FormLabel>
-                <DatePicker label="Tanggal Masuk" className="w-full" {...field} />
+                <DatePicker className="w-full" {...field} />
                 <FormMessage />
               </FormItem>
             )}

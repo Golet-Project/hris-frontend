@@ -1,13 +1,11 @@
 "use client"
 
-import { useRouter } from "next-nprogress-bar"
 import { BasicLoginSchema } from "../../_dto/basic"
 import { postBasicLogin } from "../../_repo/server/api/basic"
 import { Dispatch, SetStateAction } from "react"
+import { ProgressBarRouter } from "@/lib/client/type"
 
-export async function handleLogin(data: BasicLoginSchema) {
-  const router = useRouter()
-
+export async function handleLogin(data: BasicLoginSchema, router: ProgressBarRouter) {
   try {
     const response = await postBasicLogin({
       email: data.email,
